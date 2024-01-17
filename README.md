@@ -21,8 +21,8 @@ Hello, I'm a student at EMU pursuing a degree in computer science. I'm skilled w
 ### [Hunter Cox](https://github.com/CreamTW) - Team Member
 Hello there. I am a Senior at EMU working on my degree for Computer Science. I like to code in java and python as they are more enjoyable to code in for me than some other languages and I trying to learn some coding in databases in my off time. I hope this will be a fun project to enjoy.
 
-### [Ali](https://github.com/) - Team Member
-I'm a student at EMU working towards a Computer Science degree. I have experience with React and will develop part of the front end of the project so that it looks appealing and feels interactive and responsive to the user.
+### [Ali](https://github.com/AliAlJabur24) - Team Member
+I'm a student at EMU working towards a Computer Science degree. I have experience with React and will mainly work on the backend.
 
 ### [Barbara](https://github.com/) - Team Member
 Hi, I'm a student at EMU majoring in computer science. I am confortable with multiple programmming languages, one of them being Java. I hope to develop my skills working in this project and learn new things.  

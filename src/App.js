@@ -1,26 +1,22 @@
-import logo from "./logo.svg";
-import "./App.css";
+import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Home";
+import Room from "./Room";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        {/* ellen: added rose color to text to test if tailwind works */}
-        <p className="text-rose-400">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/room/:roomId" element={<Room />} />
+          {/* ellen: setup route by adding path (url) and element (react component) */}
+          {/* example: <Route path="my/URL" element={<MyComponent />} */}
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
 
 export default App;
+

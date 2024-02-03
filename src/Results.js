@@ -38,7 +38,7 @@ function Results() {
                 </div>
                 <div className="flex flex-col items-center gap-6">
                     <p className="text-2xl">Everyone's Guesses</p>
-                    <div className="grid grid-cols-[repeat(3,minmax(max-content,1fr))] gap-4 shrink justify-center items-center">
+                    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 shrink justify-center items-center">
                         {guesses.map(guess => <div className="text-2xl px-4 py-2 border-2 border-solid border-black size-fit" key={guess}> {guess}</div> )}
                     </div>
                     {/* status board(?) */}

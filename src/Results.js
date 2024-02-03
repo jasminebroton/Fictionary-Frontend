@@ -6,8 +6,10 @@ function Results() {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const category = "a nothingburger";
-    const [guesses, setGuesses] = useState(["guess_1", "guess_2", "guess_3", "guess_4", "guess_5", "guess_6", "guess_7", "guess_8", "guess_9"]);
-    const [votes, setVotes] = useState({"guess_9": "4", "guess_1": "3", "guess_6": "1"});
+    const [guesses, setGuesses] = useState(["user_1", "user_2", "user_3", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
+    const [votes, setVotes] = useState([{user: "user_9", points: 4, role: "trickster"}, {user: "user_1", points: 3, role: "artist"}, {user: "user_6", points: 1, role: "trickster"}]);
+    const [correct, setCorrect] = useState(["user_3", "user_6", "user_9"]);
+    const [score, setScore] = useState(0);
 
     function handleCtnBtn() {
         navigate(`/scoreboard/${roomId}`);
@@ -18,33 +20,41 @@ function Results() {
             <canvas
                 // width={996}
                 // height={468}
-                className="bg-white shadow-lg border-2 border-gray-300 m-6 size-11/12"
+                className="bg-white shadow-lg border-2 border-gray-300 size-11/12"
             ></canvas>
         );
     }
 
     return(
-        <>
+        <div className="bg-[#ece6c2] font-serif h-screen">
             {/* display room and page title for testing */}
             <p>room: {roomId} &#40;results&#41;</p> 
             <p className="text-2xl text-left ml-4">Fictionary</p>
-            <div className="grid grid-cols-2 gap-1">
-                <div className="flex flex-col shrink justify-center items-center aspect-square">
+            <div className="grid grid-cols-2 p-0 m-0 justify-items-stretch">
+                <div className="flex flex-col justify-center items-center aspect-square max-h-[80vh] p-0 m-4">
                     <MyCanvas />
-                    <p>Category was</p>
+                    <p className="my-2">Category was</p>
                     <p className="text-2xl">{category}</p>
                 </div>
-                <div className="flex flex-col items-center px-4 gap-4">
+                <div className="flex flex-col items-center gap-6">
                     <p className="text-2xl">Everyone's Guesses</p>
-                    <div className="flex flex-row flex-wrap gap-4 shrink justify-center items-center">
+                    <div className="grid grid-cols-[repeat(3,minmax(max-content,1fr))] gap-4 shrink justify-center items-center">
                         {guesses.map(guess => <div className="text-2xl px-4 py-2 border-2 border-solid border-black size-fit" key={guess}> {guess}</div> )}
                     </div>
                     {/* status board(?) */}
-                    <div></div>
+                    <div className="text-left border-2 border-solid border-black px-4 py-2 my-6">
+                        <div className="mb-4">
+                            {votes.map(vote => <div key={vote.user}>{vote.user} scored {vote.points} {vote.role} points.</div> )}
+                        </div>
+                        <div>
+                            <p>users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
+                        </div>
+                    </div>
+                    <p>Your Score: {score}</p>
                     <div className="border-2 border-solid border-black hover:border-sky-600 hover:text-sky-600 cursor-pointer size-fit px-4 py-2" onClick={handleCtnBtn} >Continue</div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
 

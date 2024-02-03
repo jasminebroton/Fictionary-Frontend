@@ -1,12 +1,17 @@
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Scoreboard() {
-    // ellen: placeholder roomId value in the case nothing is passed so it doesn't break during testing
-    const { roomId } = useParams() || `e776`;
+    const navigate = useNavigate();
+    const { roomId } = useParams();
 
+    function handleCtnBtn() {
+        navigate(`/categories/${roomId}`);
+    }
     return (
         <div>
-            hi mom! &#40;scoreboard&#41;
+            <p>room: {roomId} &#40;scoreboard&#41;</p>
+            <div onClick={handleCtnBtn} >Continue</div>
         </div>
     )
 }

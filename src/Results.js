@@ -26,11 +26,11 @@ function Results() {
     }
 
     return(
-        <div className="bg-[#ece6c2] font-serif h-screen">
+        <div className="bg-[#ece6c2] font-serif pb-4 min-h-fit">
             {/* display room and page title for testing */}
             <p>room: {roomId} &#40;results&#41;</p> 
             <p className="text-2xl text-left ml-4">Fictionary</p>
-            <div className="grid grid-cols-2 p-0 m-0 justify-items-stretch">
+            <div className="grid lg:grid-cols-2 sm:grid-rows-2 p-0 m-0 justify-items-stretch">
                 <div className="flex flex-col justify-center items-center aspect-square max-h-[80vh] p-0 m-4">
                     <MyCanvas />
                     <p className="my-2">Category was</p>
@@ -38,17 +38,15 @@ function Results() {
                 </div>
                 <div className="flex flex-col items-center gap-6">
                     <p className="text-2xl">Everyone's Guesses</p>
-                    <div className="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 shrink justify-center items-center">
+                    <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-4 shrink justify-center items-center">
                         {guesses.map(guess => <div className="text-2xl px-4 py-2 border-2 border-solid border-black size-fit" key={guess}> {guess}</div> )}
                     </div>
                     {/* status board(?) */}
-                    <div className="text-left border-2 border-solid border-black px-4 py-2 my-6">
+                    <div className="flex flex-col shrink text-left border-2 border-solid border-black px-4 py-2 max-w-96">
                         <div className="mb-4">
                             {votes.map(vote => <div key={vote.user}>{vote.user} scored {vote.points} {vote.role} points.</div> )}
                         </div>
-                        <div>
-                            <p>users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
-                        </div>
+                        <p className="flex shrink">users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
                     </div>
                     <p>Your Score: {score}</p>
                     <div className="border-2 border-solid border-black hover:border-sky-600 hover:text-sky-600 cursor-pointer size-fit px-4 py-2" onClick={handleCtnBtn} >Continue</div>

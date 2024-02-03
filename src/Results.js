@@ -26,11 +26,11 @@ function Results() {
     }
 
     return(
-        <div className="bg-[#ece6c2] font-serif pb-4 min-h-fit">
+        <div className="bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max">
             {/* display room and page title for testing */}
             <p>room: {roomId} &#40;results&#41;</p> 
             <p className="text-2xl text-left ml-4">Fictionary</p>
-            <div className="grid lg:grid-cols-2 sm:grid-rows-2 p-0 m-0 justify-items-stretch">
+            <div className="grid lg:grid-cols-2 lg:grid-rows-1 sm:grid-rows-2 p-0 m-0 justify-items-stretch">
                 <div className="flex flex-col justify-center items-center aspect-square max-h-[80vh] p-0 m-4">
                     <MyCanvas />
                     <p className="my-2">Category was</p>

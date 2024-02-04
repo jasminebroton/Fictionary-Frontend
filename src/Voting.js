@@ -102,6 +102,7 @@ function Voting() {
           <SubmitButton onClick={handeClick}/>
         </div>
       </div>
+
     );
 }
 

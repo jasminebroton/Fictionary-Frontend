@@ -1,12 +1,12 @@
-import { useNavigate } from "react-router-dom";
-
+import ShortUniqueId from "short-unique-id";
 
 function Home() {
     const navigate = useNavigate();
-
+    const uid = new ShortUniqueId({ length: 4 });
 
     function handleHostClick() {
-        navigate(`/host/`);
+        const roomId = uid.rnd();
+        navigate(`/host/${roomId}`);
     }
     function handleJoinClick(){
         navigate(`/join/`);
@@ -32,3 +32,5 @@ function Home() {
 }
 
 export default Home;
+
+//            

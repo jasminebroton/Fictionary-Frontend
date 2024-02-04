@@ -5,8 +5,8 @@ import Room from "./Room";
 import Results from './Results';
 import Scoreboard from './Scoreboard';
 import Categories from './Categories';
-import Host from './Host';
 import Lobby from './Lobby';
+import Host from './Host';
 import Guest from './Guest';
 
 function App() {
@@ -18,6 +18,7 @@ function App() {
           <Route path="/room/:roomId" element={<Room />} />
           <Route path="/results/:roomId" element={<Results />} />
           <Route path="/scoreboard/:roomId" element={<Scoreboard />} />
+          <Route path="/lobby/:roomId" element={<Lobby />}/>
 
           {/* ellen: just placeholder boilerplate for testing bc my page routes to yours, feel free to delete/edit/whatever */}
           <Route path="/categories/:roomId" element={<Categories />} />

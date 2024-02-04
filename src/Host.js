@@ -13,7 +13,7 @@ function Host() {
     }
 
     function returnHome(){
-
+        navigate('/');
     }
 
     return (

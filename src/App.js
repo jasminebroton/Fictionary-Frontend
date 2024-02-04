@@ -6,6 +6,8 @@ import Results from './Results';
 import Scoreboard from './Scoreboard';
 import Categories from './Categories';
 import Lobby from './Lobby';
+import Host from './Host';
+import Guest from './Guest';
 
 function App() {
   return (
@@ -20,6 +22,10 @@ function App() {
 
           {/* ellen: just placeholder boilerplate for testing bc my page routes to yours, feel free to delete/edit/whatever */}
           <Route path="/categories/:roomId" element={<Categories />} />
+
+          <Route path="/host/:roomId" element={<Host />} />
+          <Route path="/guest/" element={<Guest />} />
+          <Route path="/lobby/:roomId/:guestName" element={<Lobby />} />
 
           {/* ellen: setup route by adding path (url) and element (react component) */}
           {/* example: <Route path="/my/URL" element={<MyComponent />} */}

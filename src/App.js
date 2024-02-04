@@ -10,6 +10,7 @@ import Voting from'./Voting';
 import Lobby from './Lobby';
 import Host from './Host';
 import Guest from './Guest';
+import Rules from './Rules';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/host/:roomId" element={<Host />} />
           <Route path="/guest/" element={<Guest />} />
           <Route path="/lobby/:roomId/:guestName" element={<Lobby />} />
+          <Route path="/rules/" element={<Rules />} />
 
           {/* ellen: setup route by adding path (url) and element (react component) */}
           {/* example: <Route path="/my/URL" element={<MyComponent />} */}

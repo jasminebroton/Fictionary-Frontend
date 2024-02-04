@@ -35,3 +35,19 @@ I'm a student at EMU working towards a Computer Science degree. I have experienc
 ### [Barbara](https://github.com/) - Team Member
 
 Hi, I'm a student at EMU majoring in computer science. I am confortable with multiple programmming languages, one of them being Java. I hope to develop my skills working in this project and learn new things.
+
+## Our application 
+
+### Setup Instructions 
+
+To get started with running Fictionary, download Node.js to your machine via https://nodejs.org/en. Then, in the source directory, run the command npm install. This will install all current dependencies and allow you to run your app without issue. In your preferred browser, navigate to http://localhost:3000 to access the homepage of our application. 
+
+### Versions 
+Node.js/Javascript: v20.11.0
+
+
+### Layout Description 
+
+For our application, we've divided our frontend and our backend into two seperate repositories. This repository contains only our front end. the src folder contains all of our code, while the public folder contains resources that were automatically included with the boiler plate React app. The folder .vscode are extra packages required to allow the use of TailwindCSS in VSCode.
+
+

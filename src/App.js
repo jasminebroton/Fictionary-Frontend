@@ -5,6 +5,8 @@ import Room from "./Room";
 import Results from './Results';
 import Scoreboard from './Scoreboard';
 import Categories from './Categories';
+import Drawing from './Drawing';
+import Voting from'./Voting';
 
 function App() {
   return (
@@ -15,9 +17,11 @@ function App() {
           <Route path="/room/:roomId" element={<Room />} />
           <Route path="/results/:roomId" element={<Results />} />
           <Route path="/scoreboard/:roomId" element={<Scoreboard />} />
-
-          {/* ellen: just placeholder boilerplate for testing bc my page routes to yours, feel free to delete/edit/whatever */}
           <Route path="/categories/:roomId" element={<Categories />} />
+          <Route path="/drawing/:roomId" element={<Drawing />} />
+
+          {/* placeholder for the voting path, feel free to remove/edit/etc. */}
+          <Route path="/voting/:roomId" element={<Voting />} />
 
           {/* ellen: setup route by adding path (url) and element (react component) */}
           {/* example: <Route path="/my/URL" element={<MyComponent />} */}
@@ -28,4 +32,3 @@ function App() {
 }
 
 export default App;
-

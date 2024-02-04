@@ -23,8 +23,6 @@ function App() {
           <Route path="/lobby/:roomId" element={<Lobby />}/>
           <Route path="/categories/:roomId" element={<Categories />} />
           <Route path="/drawing/:roomId" element={<Drawing />} />
-
-          {/* placeholder for the voting path, feel free to remove/edit/etc. */}
           <Route path="/voting/:roomId" element={<Voting />} />
 
           <Route path="/host/:roomId" element={<Host />} />

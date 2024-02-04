@@ -5,6 +5,8 @@ import Room from "./Room";
 import Results from './Results';
 import Scoreboard from './Scoreboard';
 import Categories from './Categories';
+import Drawing from './Drawing';
+import Voting from'./Voting';
 import Lobby from './Lobby';
 import Host from './Host';
 import Guest from './Guest';
@@ -19,9 +21,11 @@ function App() {
           <Route path="/results/:roomId" element={<Results />} />
           <Route path="/scoreboard/:roomId" element={<Scoreboard />} />
           <Route path="/lobby/:roomId" element={<Lobby />}/>
-
-          {/* ellen: just placeholder boilerplate for testing bc my page routes to yours, feel free to delete/edit/whatever */}
           <Route path="/categories/:roomId" element={<Categories />} />
+          <Route path="/drawing/:roomId" element={<Drawing />} />
+
+          {/* placeholder for the voting path, feel free to remove/edit/etc. */}
+          <Route path="/voting/:roomId" element={<Voting />} />
 
           <Route path="/host/:roomId" element={<Host />} />
           <Route path="/guest/" element={<Guest />} />
@@ -36,4 +40,3 @@ function App() {
 }
 
 export default App;
-

@@ -609,3 +609,22 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/*
+This is what I (Hunter) added for custom changes for the UI 
+Was specifically made for the Rules Page.
+This was not made by tailwind auto generation.
+*/
+
+.fic-button {
+  @apply bg-[#cc6b49] hover:bg-[#6b3927] text-[#ece6c2];
+}
+
+.rule-text {
+  @apply w-fit p-2 mx-auto text-center;
+}
+
+.display-linebreak {
+  white-space: pre-line;
+}
+

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-function Scoreboard() {
+function Scoreboard({display}) {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const [data, setData] = useState([{user: "user_9", points: 5, rank: "1st"}, {user: "user_1", points: 3, rank: "2nd"}, {user: "user_6", points: 2, rank: "3rd"}, {user: "user_3", points: 1, rank: "4th"}, {user: "user_2", points: 0, rank: "5th"}, {user: "user_4", points: 0, rank: "5th"}, {user: "user_5", points: 0, rank: "5th"}, {user: "user_7", points: 0, rank: "5th"}, {user: "user_8", points: 0, rank: "5th"}]);
@@ -12,7 +12,7 @@ function Scoreboard() {
         navigate(`/categories/${roomId}`);
     }
     return (
-        <div className="bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max">
+        <div className={`${display} bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`}>
             {/* display room and page title for testing */}
             <p>room: {roomId} &#40;scoreboard&#41;</p> 
             <p className="text-2xl text-center ml-4">Fictionary</p>

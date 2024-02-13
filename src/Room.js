@@ -11,16 +11,13 @@ import Voting from "./Voting.js";
 import Results from "./Results.js";
 import Scoreboard from './Scoreboard';
 
-// import TestModal from "./TestModal";
-// import Testvas from "./Testvas";
-
 function Room() {
     const { roomId } = useParams();
     const location = useLocation();
-    const [host] = useState(location.state?.userPerms?.host ? true : false);
+    const [host] = useState(location.state?.host ? true : false);
 
+    // lift the websocket connection to global state for game pages
     const socket = useRef(null);
-
     function MyCanvas({ roomId }) {
         const canvasRef = useRef(null);
         const [drawing, setDrawing] = useState(false);
@@ -114,9 +111,7 @@ function Room() {
 
     return (
         <div>
-            {/* <button data-modal-target="lobby-modal" data-modal-show="lobby-modal" type="button" >show</button> */}
-
-            <div data-modal-target="lobby-modal" id="lobby-modal" className=" sbg-[#ece6c2] font-serif h-screen justify-center">
+            <div data-modal-target="lobby-modal" id="lobby-modal" className="bg-[#ece6c2] font-serif h-screen justify-center">
                 <Lobby modalId="lobby-modal" nextModalId="categories-modal" />
             </div>
             <div data-modal-target="categories-modal" id="categories-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
@@ -129,21 +124,11 @@ function Room() {
                 <Voting modalId="voting-modal" nextModalId="results-modal" />
             </div>
             <div data-modal-target="results-modal" id="results-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
-                <Results modalId="results-modal" nextModalId="scoreboard-modal" MyCanvas={MyCanvas} />
+                <Results modalId="results-modal" nextModalId="scoreboard-modal" />
             </div>
             <div data-modal-target="scoreboard-modal" id="scoreboard-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
                 <Scoreboard modalId="scoreboard-modal" nextModalId="categories-modal" />
             </div>
-
-            {/* <button data-modal-target="modal-1" data-modal-toggle="modal-1" type="button">show</button>
-
-            <div id="modal-1" className="hidden">
-                <TestModal modalId="modal-1" nextModalId="modal-2" />
-            </div>
-
-            <div id="modal-2" className="hidden" >
-                <Testvas MyCanvas={MyCanvas} />
-            </div> */}
         </div>
     );  
 }

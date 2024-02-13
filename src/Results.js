@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
 import "flowbite";
 
-function Results({modalId, nextModalId, display}) {
-    // const navigate = useNavigate();
+function Results({modalId, nextModalId, MyCanvas}) {
     const { roomId } = useParams();
     const category = "a nothingburger";
     const [guesses, setGuesses] = useState(["user_1", "user_2", "user_3", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -12,22 +10,8 @@ function Results({modalId, nextModalId, display}) {
     const [correct, setCorrect] = useState(["user_3", "user_6", "user_9"]);
     const [score, setScore] = useState(0);
 
-    // function handleCtnBtn() {
-    //     navigate(`/scoreboard/${roomId}`);
-    // }
-
-    function MyCanvas() {
-        return (
-            <canvas
-                // width={996}
-                // height={468}
-                className="bg-white shadow-lg border-2 border-gray-300 size-11/12"
-            ></canvas>
-        );
-    }
-
     return(
-        <div id={`${modalId}`} className={`${display} bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`}>
+        <div className={`bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`}>
             {/* display room and page title for testing */}
             <p>room: {roomId} &#40;results&#41;</p> 
             <p className="text-2xl text-left ml-4">Fictionary</p>
@@ -50,8 +34,7 @@ function Results({modalId, nextModalId, display}) {
                         <p className="flex shrink">users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
                     </div>
                     <p>Your Score: {score}</p>
-                    {/* <div className="border-2 border-solid border-black hover:border-sky-600 hover:text-sky-600 cursor-pointer size-fit px-4 py-2" onClick={handleCtnBtn} >Continue</div> */}
-                    <button data-modal-hide={`${modalId}`} data-modal-target={`${nextModalId}`} data-modal-toggle={`${nextModalId}`} type="button" className="border-2 border-solid border-black hover:border-sky-600 hover:text-sky-600 cursor-pointer size-fit px-4 py-2" >Continue</button>
+                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="border-2 border-solid border-black hover:border-sky-600 hover:text-sky-600 cursor-pointer size-fit px-4 py-2" >Continue</button>
                 </div>
             </div>
         </div>

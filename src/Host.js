@@ -8,8 +8,11 @@ function Host() {
     function toLobby()
     {   
         const guestName = document.getElementById("name").value;
-        if(guestName !== "")
-            navigate(`/lobby/${roomId}/${guestName}`);
+        if(guestName !== "") {
+            navigate(`/room/${roomId}`, {replace: true, state: {"host": true, "name": guestName}});
+            // see issue #16
+            window.location.reload();
+        }
     }
 
     function returnHome(){

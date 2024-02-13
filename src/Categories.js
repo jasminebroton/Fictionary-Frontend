@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Categories() {
+function Categories({modalId, nextModalId}) {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
@@ -28,11 +28,14 @@ function Categories() {
 
     //placeholder until votes can be sent to the backend
     if(counter <= 0){
-        navigate(`/drawing/${roomId}`);
+        // navigate(`/drawing/${roomId}`);
+        document.getElementById("categories-ctn-btn").click();
     }
 
     return (
         <div className="bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+            <button type="button" onClick={() => document.getElementById("categories-ctn-btn").click()} className="" >&#40;this should not be visible&#41;</button>
+            <button id="categories-ctn-btn" data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="hidden"></button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
                 <p className="col-start-2 col-span-3 text-4xl">Fictionary</p>
                 <p className="bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 justify-self-center">{timer}</p>

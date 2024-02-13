@@ -1,8 +1,7 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Drawing(){
-    const navigate = useNavigate();
+function Drawing({modalId, nextModalId}){
     const { roomId } = useParams();
     const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -39,7 +38,7 @@ function Drawing(){
 
     //placeholder until the drawing can actually be sent to the backend
     function submitDrawing(){
-        navigate(`/voting/${roomId}`);
+        // navigate(`/voting/${roomId}`);
     }
 
     //placeholder until messages can be sent between clients
@@ -95,7 +94,8 @@ function Drawing(){
 
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
 
-                    <div className="col-start-4 row-start-3 bg-[#6f5643] text-[#ece6c2] px-3 py-2 mx-auto justify-self-center self-center" onClick={submitDrawing}>Submit Drawing</div>
+                    {/* <div className="col-start-4 row-start-3 bg-[#6f5643] text-[#ece6c2] px-3 py-2 mx-auto justify-self-center self-center" onClick={submitDrawing}>Submit Drawing</div> */}
+                    <div data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="col-start-4 row-start-3 bg-[#6f5643] text-[#ece6c2] px-3 py-2 mx-auto justify-self-center self-center" >Submit Drawing</div>
                 </div>
             </div>
         );

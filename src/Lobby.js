@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-function Lobby(){
+function Lobby({modalId, nextModalId}){
     const navigate = useNavigate();
     const { roomId } = useParams(); //get room ID from URL
     //have user list
@@ -13,9 +13,9 @@ function Lobby(){
     function handleLeaveClick() { //leave
         navigate(`/`);//(home)
     }
-    function handleStartClick() { //start
-        navigate(`/categories/${roomId}`);
-    }
+    // function handleStartClick() { //start
+    //     navigate(`/categories/${roomId}`);
+    // }
     
     //procedurally generate table/list for users 
     return (
@@ -34,7 +34,8 @@ function Lobby(){
             </div>
             <div>
                 <button onClick={handleLeaveClick} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Leave</button>
-                <button onClick={handleStartClick} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Start</button>
+                {/* <button onClick={handleStartClick} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Start</button> */}
+                <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Start</button>
             </div>
         </div>
     );

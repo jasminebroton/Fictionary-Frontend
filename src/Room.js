@@ -4,11 +4,15 @@ import io from 'socket.io-client';
 import React, { useEffect, useRef, useState } from 'react';
 import "flowbite";
 
+import Lobby from "./Lobby.js";
+import Categories from "./Categories.js";
+import Drawing from "./Drawing.js";
+import Voting from "./Voting.js";
 import Results from "./Results.js";
 import Scoreboard from './Scoreboard';
 
-import TestModal from "./TestModal";
-import Testvas from "./Testvas";
+// import TestModal from "./TestModal";
+// import Testvas from "./Testvas";
 
 function Room() {
     const { roomId } = useParams();
@@ -22,7 +26,6 @@ function Room() {
         const [drawing, setDrawing] = useState(false);
         const [canDraw, setCanDraw] = useState(host);
         console.log(`canDraw: ${canDraw}`);
-        // const [canDraw, setCanDraw] = useState(true);
         const [lastPos, setLastPos] = useState(null);
 
         useEffect(() => {
@@ -31,11 +34,6 @@ function Room() {
                 console.log("Connected to Socket.IO server");
                 socket.current.emit('joinRoom', roomId);
             });
-    
-            // socket.current.on('drawingPrivilege', (hasPrivilege) => {
-            //     setCanDraw(hasPrivilege);
-            //     console.log(`Received drawing privilege: ${hasPrivilege}`);
-            // });
     
             socket.current.on('drawing', (data) => {
                 drawLine(data.x0, data.y0, data.x1, data.y1);
@@ -105,9 +103,7 @@ function Room() {
         return (
             <canvas
                 ref={canvasRef}
-                width={996}
-                height={468}
-                className="bg-white shadow-lg border-2 border-gray-300 m-10"
+                className="bg-white shadow-lg border-2 border-gray-300 size-11/12"
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
@@ -117,21 +113,29 @@ function Room() {
     }
 
     return (
-        // <div className="flex flex-col items-center justify-center h-screen bg-custom-bg-color">
-        //     <div>
-        //         <p className="text-center text-custom-size">Room: {roomId}</p>
-        //     </div>
-        // </div>
         <div>
-            {/* <Results modalId="results-modal" nextModalId="scoreboard-modal" display="hidden" /> */}
-            {/* <Scoreboard modalId="scoreboard-modal" nextModalId="categories-modal" display="hidden" /> */}
+            {/* <button data-modal-target="lobby-modal" data-modal-show="lobby-modal" type="button" >show</button> */}
 
-            {/* <button data-modal-target="test-modal" data-modal-toggle="test-modal" type="button" >show</button>
-            <div id="test-modal" className="bg-sky-800 hidden" aria-hidden="true">
-                hi mom
-                <button data-modal-target="modal-2" data-modal-show="modal-2" data-modal-hide="test-modal" type="button">hide</button>
-            </div> */}
-            <button data-modal-target="modal-1" data-modal-toggle="modal-1" type="button">show</button>
+            <div data-modal-target="lobby-modal" id="lobby-modal" className=" sbg-[#ece6c2] font-serif h-screen justify-center">
+                <Lobby modalId="lobby-modal" nextModalId="categories-modal" />
+            </div>
+            <div data-modal-target="categories-modal" id="categories-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+                <Categories modalId="categories-modal" nextModalId="drawing-modal" />
+            </div>
+            <div data-modal-target="drawing-modal" id="drawing-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+                <Drawing modalId="drawing-modal" nextModalId="voting-modal" />
+            </div>
+            <div data-modal-target="voting-modal" id="voting-modal" className="hidden bg-background-color min-h-screen text-text">
+                <Voting modalId="voting-modal" nextModalId="results-modal" />
+            </div>
+            <div data-modal-target="results-modal" id="results-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
+                <Results modalId="results-modal" nextModalId="scoreboard-modal" MyCanvas={MyCanvas} />
+            </div>
+            <div data-modal-target="scoreboard-modal" id="scoreboard-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
+                <Scoreboard modalId="scoreboard-modal" nextModalId="categories-modal" />
+            </div>
+
+            {/* <button data-modal-target="modal-1" data-modal-toggle="modal-1" type="button">show</button>
 
             <div id="modal-1" className="hidden">
                 <TestModal modalId="modal-1" nextModalId="modal-2" />
@@ -139,7 +143,7 @@ function Room() {
 
             <div id="modal-2" className="hidden" >
                 <Testvas MyCanvas={MyCanvas} />
-            </div>
+            </div> */}
         </div>
     );  
 }

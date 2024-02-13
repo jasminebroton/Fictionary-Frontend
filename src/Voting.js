@@ -62,26 +62,36 @@ const Canvas = () => {
   );
 };
 
-const SubmitButton = ({ onClick }) => {
- return (
-  <div>
-    <button onClick={onClick} className="bg-button-color hover:bg-button-darker text-text font-bold py-2 px-4 m-12 text-6xl w-64 shadow-2xl">
-      Submit
-    </button>
-  </div>
- );
-};
+// const SubmitButton = ({ onClick }) => {
+//  return (
+//   <div>
+//     <button onClick={onClick} className="bg-button-color hover:bg-button-darker text-text font-bold py-2 px-4 m-12 text-6xl w-64 shadow-2xl">
+//       Submit
+//     </button>
+//   </div>
+//  );
+// };
 
 
-function Voting() {
-    const navigate = useNavigate();
+function Voting({modalId, nextModalId}) {
+    // const navigate = useNavigate();
     const { roomId } = useParams();
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
      
-     function handeClick() {
-       navigate(`/results/${roomId}`);
+    //  function handeClick() {
+    //    navigate(`/results/${roomId}`);
+    //  };
+    
+    const SubmitButton = () => {
+      return (
+       <div>
+         <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="bg-button-color hover:bg-button-darker text-text font-bold py-2 px-4 m-12 text-6xl w-64 shadow-2xl">
+           Submit
+         </button>
+       </div>
+      );
      };
-     
+
     return (
       <div className="bg-background-color min-h-screen text-text">
         <div className= "flex justify-end p-12">
@@ -99,7 +109,8 @@ function Voting() {
           </div>
         </div>
         <div className="flex justify-center">
-          <SubmitButton onClick={handeClick}/>
+          {/* <SubmitButton onClick={handeClick}/> */}
+          <SubmitButton />
         </div>
       </div>
 

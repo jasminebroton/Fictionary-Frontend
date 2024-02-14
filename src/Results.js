@@ -43,7 +43,7 @@ function Results({modalId, nextModalId}) {
                         <p className="flex shrink">users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
                     </div>
                     <p className="sub-header">Your Score: {score}</p>
-                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="blue-button size-fit px-4 py-2 mt-0" >Continue</button>
+                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="blue-button size-fit px-4 py-2 mt-0" data-testid="results-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

@@ -4,12 +4,15 @@ import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Lobby() {
+function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, guestName}) {
   const navigate = useNavigate();
-  const { roomId, guestName } = useParams();
+  const { roomId } = useParams();
+  // ellen: guestName passed as a prop from Host.js and extracted in Room.js passed to Lobby.js as a prop
+  // const { roomId, guestName } = useParams();
   const [players, setPlayers] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [isHost, setIsHost] = useState(false);
+  // ellen: moved to Room.js so each game page can access these
+  // const [socket, setSocket] = useState(null);
+  // const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     // Initialize socket connection
@@ -55,6 +58,7 @@ function Lobby() {
     } else {
       alert('Only the host can start the game.');
     }
+  }
 
     //procedurally generate table/list for users 
     return (
@@ -65,7 +69,7 @@ function Lobby() {
                 <p className="sub-header pt-0 mb-10">Room: {roomId}</p>
             </div>
             <div>
-                <ul className = "grid grid-cols-2 gap-10" > 
+                <ul className = "grid grid-cols-2 gap-10" >
                     {players.map((player, i) => (
                       <li className="large-text pt-0 mb-0" key={i}>
                         {player.name} {player.isHost ? '(Host)' : ''}
@@ -76,7 +80,7 @@ function Lobby() {
             <div>
                 <button onClick={handleLeaveClick} className="red-button mx-20 mt-10">Leave</button>
                 {isHost && (
-                  <button onClick={handleStartClick} className="blue-button mx-20 mt-10">Start</button>
+                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="blue-button mx-20 mt-10" >Start</button>
                 )}
             </div>
         </div>

@@ -1,19 +1,14 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import "flowbite";
 
-function Results() {
-    const navigate = useNavigate();
+function Results({modalId, nextModalId}) {
     const { roomId } = useParams();
     const category = "a nothingburger";
     const [guesses, setGuesses] = useState(["user_1", "user_2", "user_3", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [votes, setVotes] = useState([{user: "user_9", points: 4, role: "trickster"}, {user: "user_1", points: 3, role: "artist"}, {user: "user_6", points: 1, role: "trickster"}]);
     const [correct, setCorrect] = useState(["user_3", "user_6", "user_9"]);
     const [score, setScore] = useState(0);
-
-    function handleCtnBtn() {
-        navigate(`/scoreboard/${roomId}`);
-    }
 
     function MyCanvas() {
         return (
@@ -31,7 +26,7 @@ function Results() {
             <p>room: {roomId} &#40;results&#41;</p> 
             <p className="large-text text-left ml-4">Fictionary</p>
             <div className="grid lg:grid-cols-2 lg:grid-rows-1 sm:grid-rows-2 p-0 m-0 justify-items-stretch">
-                <div className="flex flex-col justify-center items-center aspect-square max-h-[80vh] p-0 m-4">
+                <div className="flex flex-col justify-center items-center max-h-[80vh] p-0 m-4">
                     <MyCanvas />
                     <p className="my-2">Category was</p>
                     <p className="laege-text">{category}</p>
@@ -49,7 +44,7 @@ function Results() {
                         <p className="flex shrink">users: {correct.join(", ")} earned 1 bonus point for guessing correctly.</p>
                     </div>
                     <p className="sub-header">Your Score: {score}</p>
-                    <div className="blue-button size-fit px-4 py-2 mt-0" onClick={handleCtnBtn} >Continue</div>
+                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="blue-button size-fit px-4 py-2 mt-0" >Continue</button>
                 </div>
             </div>
         </div>

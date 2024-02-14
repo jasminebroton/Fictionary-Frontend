@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const Timer = () => {
   const [seconds, setSeconds] = useState(60);
@@ -62,48 +62,36 @@ const Canvas = () => {
   );
 };
 
-const SubmitButton = ({ onClick }) => {
- return (
-  <div>
-    <button onClick={onClick}>
-      Submit
-    </button>
-  </div>
- );
-};
-
-
-function Voting() {
-  const navigate = useNavigate();
-  const { roomId } = useParams();
-  const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
-   
-   function handeClick() {
-     navigate(`/results/${roomId}`);
-   };
-   
-  return (
-    <div className="background custom-text">
-      <div className= "flex justify-end">
-        <Timer />
-      </div>
-    
-      <div className="w-full mx-auto flex flex-row items-center">
-          <div className="basis-1/2">
-            <Canvas />
+function Voting({modalId, nextModalId}) {
+    const { roomId } = useParams();
+    const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
+     
+    return (
+      <div className="background custom-text">
+        
+          <div className= "flex justify-end">
+            <Timer />
           </div>
-          <div className='basis-1/2'>
-            <p className='header'>CATEGORY IS</p> <br />
-            <p className='sub-header'>CATEGORY</p>
-            <Grid data = {data} />
-        </div>
+        
+          <div className="w-full mx-auto flex flex-row items-center">
+              <div className="basis-1/2">
+                <Canvas />
+              </div>
+              <div className="basis-1/2">
+                <p className='header'>CATEGORY IS</p> <br />
+                <p className='sub-header'>CATEGORY</p>
+                <Grid data = {data} />
+              </div>
+              <div className="flex justify-center brown-button">
+                <div>
+                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" >
+                    Submit
+                  </button>
+                </div>
+              </div>
+          </div>
       </div>
-      <div className="flex justify-center brown-button">
-        <SubmitButton onClick={handeClick}/>
-      </div>
-    </div>
-
-  );
+    );
 }
 
 export default Voting;

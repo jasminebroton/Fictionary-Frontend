@@ -14,105 +14,13 @@ import Scoreboard from './Scoreboard';
 function Room() {
     const { roomId } = useParams();
     const location = useLocation();
-    const [host] = useState(location.state?.host ? true : false);
-
-    // lift the websocket connection to global state for game pages
-    const socket = useRef(null);
-    function MyCanvas({ roomId }) {
-        const canvasRef = useRef(null);
-        const [drawing, setDrawing] = useState(false);
-        const [canDraw, setCanDraw] = useState(host);
-        console.log(`canDraw: ${canDraw}`);
-        const [lastPos, setLastPos] = useState(null);
-
-        useEffect(() => {
-            socket.current = io('http://localhost:8000');
-            socket.current.on('connect', () => {
-                console.log("Connected to Socket.IO server");
-                socket.current.emit('joinRoom', roomId);
-            });
-    
-            socket.current.on('drawing', (data) => {
-                drawLine(data.x0, data.y0, data.x1, data.y1);
-            });
-    
-            return () => {
-                socket.current.disconnect();
-            };
-        }, [roomId]);
-    
-        useEffect(() => {
-            const canvas = canvasRef.current;
-            const context = canvas.getContext('2d');
-    
-            context.lineWidth = 2;
-            context.strokeStyle = 'black';
-        }, []);
-    
-        const getMousePos = (canvas, evt) => {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: evt.clientX - rect.left,
-                y: evt.clientY - rect.top
-            };
-        };
-    
-        const drawLine = (x0, y0, x1, y1) => {
-            const context = canvasRef.current.getContext('2d');
-            context.beginPath();
-            context.moveTo(x0, y0);
-            context.lineTo(x1, y1);
-            context.stroke();
-            context.closePath();
-        };
-    
-        const handleMouseDown = (e) => {
-            if (!canDraw) return;
-            const pos = getMousePos(canvasRef.current, e);
-            setLastPos(pos);
-            setDrawing(true);
-        };
-    
-        const handleMouseMove = (e) => {
-            if (!drawing || !canDraw) return;
-            const pos = getMousePos(canvasRef.current, e);
-            if (lastPos) {
-                drawLine(lastPos.x, lastPos.y, pos.x, pos.y);
-                const drawData = { room: roomId, x0: lastPos.x, y0: lastPos.y, x1: pos.x, y1: pos.y };
-                console.log('Emitting draw event', drawData);
-                socket.current.emit('draw', drawData);
-                setLastPos(pos);
-            }
-        };
-    
-        const handleMouseUp = () => {
-            setDrawing(false);
-            setLastPos(null);
-        };
-    
-        const handleMouseOut = () => {
-            if (drawing) {
-                setDrawing(false);
-                setLastPos(null);
-            }
-        };
-        
-        return (
-            <canvas
-                ref={canvasRef}
-                className="bg-white shadow-lg border-2 border-gray-300 size-11/12"
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseOut={handleMouseOut}
-            ></canvas>
-        );
-    }
+    const [isHost, setIsHost] = useState(location.state?.host ? true : false);
+    const [socket, setSocket] = useState(null);
 
     return (
         <div>
             <div data-modal-target="lobby-modal" id="lobby-modal" className="bg-[#ece6c2] font-serif h-screen justify-center">
-                <Lobby modalId="lobby-modal" nextModalId="categories-modal" />
+                <Lobby modalId="lobby-modal" nextModalId="categories-modal" socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} />
             </div>
             <div data-modal-target="categories-modal" id="categories-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
                 <Categories modalId="categories-modal" nextModalId="drawing-modal" />

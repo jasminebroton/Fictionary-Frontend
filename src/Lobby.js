@@ -4,12 +4,13 @@ import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Lobby({modalId, nextModalId}) {
+function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost}) {
   const navigate = useNavigate();
   const { roomId, guestName } = useParams();
   const [players, setPlayers] = useState([]);
-  const [socket, setSocket] = useState(null);
-  const [isHost, setIsHost] = useState(false);
+  // ellen: moved to Room.js so each game page can access these
+  // const [socket, setSocket] = useState(null);
+  // const [isHost, setIsHost] = useState(false);
 
   useEffect(() => {
     // Initialize socket connection

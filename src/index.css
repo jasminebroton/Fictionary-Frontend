@@ -17,7 +17,7 @@ code {
 }
 
 @layer components{
-  .defaults{
+  .background{
     @apply bg-[#ece6c2] pt-10 pb-4 px-6 min-h-screen max-h-max justify-center;
   }
   .custom-text{
@@ -32,39 +32,43 @@ code {
     @apply bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 self-baseline justify-self-center;
   }
 
+  .text-entry-box{
+    @apply text-3xl mx-auto;
+  }
+
   .table{
     @apply overflow-x-auto text-xl;
   }
   .borders{
-    @apply border-2 border-solid border-[#3f3126];
+    @apply border-2 border-solid border-[#6f5643];
   }
   .table-header{
-    @apply bg-[#6f5643] text-[#ece6c2] px-12 py-3;
+    @apply bg-[#499b83] text-[#6f5643] px-12 py-3;
   }
   .table-data{
-    @apply bg-[#d2a24c] text-[#6f5643] px-12 py-3;
+    @apply bg-[#73bda8] text-[#6f5643] px-12 py-3;
   }
 
   .header{
-    @apply text-[#6f5643] text-5xl;
+    @apply text-[#6f5643] text-5xl mx-auto;
   }
   .sub-header{
-    @apply text-[#6f5643] text-3xl;
+    @apply text-[#6f5643] text-3xl mx-auto;
   }
   .large-text{
-    @apply text-[#6f5643] text-2xl;
+    @apply text-[#6f5643] text-2xl mx-auto;
   }
 
   .red-button{
-    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-fit p-2 mx-auto;
+    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-1/6 p-2 my-2 mx-auto;
   }
   .yellow-button{
-    @apply bg-[#d2a24c] text-[#6f5643] hover:bg-[#a77b2a] w-fit p-2 mx-auto;
+    @apply bg-[#d2a24c] text-[#6f5643] hover:bg-[#a77b2a] w-1/6 p-2 my-2 mx-auto;
   }
   .brown-button{
-    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-fit p-2 mx-auto;
+    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-1/6 p-2 my-2 mx-auto self-center;
   }
   .blue-button{
-    @apply bg-[#73bda8] text-[#6f5643] hover:bg-[#499b83] w-fit p-2 mx-auto;
+    @apply bg-[#73bda8] text-[#6f5643] hover:bg-[#499b83] w-1/6 p-2 my-2 mx-auto self-center;
   }
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import "flowbite";
 
 function Results({modalId, nextModalId}) {
     const { roomId } = useParams();

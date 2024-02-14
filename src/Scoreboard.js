@@ -32,7 +32,7 @@ function Scoreboard({modalId, nextModalId}) {
                         <p className="large-text">Next Artist:</p>
                         <p className="large-text">{nextArtist}</p>
                     </div>
-                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="blue-button cursor-pointer size-fit px-4 py-2" >Continue</button>
+                    <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

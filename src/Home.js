@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import ShortUniqueId from "short-unique-id";
-import "flowbite";
 
 function Home() {
     const navigate = useNavigate();

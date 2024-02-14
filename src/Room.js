@@ -1,7 +1,6 @@
 import { useParams, useLocation } from 'react-router-dom';
 import './output.css';
-import io from 'socket.io-client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import "flowbite";
 
 import Lobby from "./Lobby.js";
@@ -18,8 +17,9 @@ function Room() {
     const [socket, setSocket] = useState(null);
 
     return (
+        // we have to wrap each component into a div with an ID so other components can find the ID and hide/show modals depending on game state
         <div>
-            <div data-modal-target="lobby-modal" id="lobby-modal" className="background custom-text">
+            <div data-modal-target="lobby-modal" id="lobby-modal" className=" background custom-text">
                 <Lobby modalId="lobby-modal" nextModalId="categories-modal" socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} />
             </div>
             <div data-modal-target="categories-modal" id="categories-modal" className="hidden background custom-text">

@@ -66,16 +66,6 @@ function Voting({modalId, nextModalId}) {
     const { roomId } = useParams();
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
      
-    const SubmitButton = () => {
-      return (
-       <div>
-         <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="bg-button-color hover:bg-button-darker text-text font-bold py-2 px-4 m-12 text-6xl w-64 shadow-2xl">
-           Submit
-         </button>
-       </div>
-      );
-     };
-
     return (
       <div className="background custom-text">
         
@@ -93,7 +83,11 @@ function Voting({modalId, nextModalId}) {
                 <Grid data = {data} />
               </div>
               <div className="flex justify-center brown-button">
-                <SubmitButton />
+                <div>
+                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" >
+                    Submit
+                  </button>
+                </div>
               </div>
           </div>
       </div>

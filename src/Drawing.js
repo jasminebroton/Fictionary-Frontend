@@ -98,7 +98,6 @@ function Drawing({modalId, nextModalId}){
                     <div className="canvas col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
 
                     <div data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
-                    <div className="brown-button w-fit col-start-4 row-start-3" onClick={submitDrawing}>Submit Drawing</div>
                 </div>
             </div>
         );

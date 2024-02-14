@@ -14,13 +14,14 @@ function Room() {
     const { roomId } = useParams();
     const location = useLocation();
     const [isHost, setIsHost] = useState(location.state?.host ? true : false);
+    const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
 
     return (
         // we have to wrap each component into a div with an ID so other components can find the ID and hide/show modals depending on game state
         <div>
             <div data-modal-target="lobby-modal" id="lobby-modal" className=" background custom-text">
-                <Lobby modalId="lobby-modal" nextModalId="categories-modal" socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} />
+                <Lobby modalId="lobby-modal" nextModalId="categories-modal" socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} />
             </div>
             <div data-modal-target="categories-modal" id="categories-modal" className="hidden background custom-text">
                 <Categories modalId="categories-modal" nextModalId="drawing-modal" />

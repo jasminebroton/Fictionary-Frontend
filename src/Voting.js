@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const Timer = () => {
   const [seconds, setSeconds] = useState(60);
@@ -21,9 +21,9 @@ const Timer = () => {
   };
 
   return (
-    <div className="text-6xl">
-      <h1>Timer</h1>
-      <p>{formatTime(seconds)}</p>
+    <div>
+      <h1 className="large-text">Timer</h1>
+      <p className="timer">{formatTime(seconds)}</p>
     </div>
   );
 };
@@ -38,9 +38,9 @@ const Grid = ({ data }) => {
   return (
     <div>
       {rows.map((row, rowIndex) => (
-        <div className="p-5 text-2xl">
+        <div>
           {row.map((element, columnIndex) => (
-            <button className="bg-button-color hover:bg-button-darker text-text py-2 px-4  m-12 text-6xl w-64 shadow-2xl">
+            <button className="yellow-button m-2">
               {element !== null ? element : 'Empty'}
             </button>
           ))}
@@ -56,32 +56,16 @@ const Canvas = () => {
       <canvas
       width={1000}
       height={1000}
-      className="bg-white shadow-2xl border-8 border-gray-400 m-10"
+      className="canvas"
       ></canvas>
     </div>
   );
 };
 
-// const SubmitButton = ({ onClick }) => {
-//  return (
-//   <div>
-//     <button onClick={onClick} className="bg-button-color hover:bg-button-darker text-text font-bold py-2 px-4 m-12 text-6xl w-64 shadow-2xl">
-//       Submit
-//     </button>
-//   </div>
-//  );
-// };
-
-
 function Voting({modalId, nextModalId}) {
-    // const navigate = useNavigate();
     const { roomId } = useParams();
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
      
-    //  function handeClick() {
-    //    navigate(`/results/${roomId}`);
-    //  };
-    
     const SubmitButton = () => {
       return (
        <div>
@@ -93,27 +77,26 @@ function Voting({modalId, nextModalId}) {
      };
 
     return (
-      <div className="bg-background-color min-h-screen text-text">
-        <div className= "flex justify-end p-12">
-          <Timer />
-        </div>
-      
-        <div className="w-full mx-auto flex flex-row items-center">
-            <div className="mx-36 mt-16 basis-1/2">
-              <Canvas />
-            </div>
-            <div className='basis-1/2 mt-56'>
-              <p className='text-6xl'>CATEGORY IS</p> <br />
-              <p className='text-3xl'>CATEGORY</p>
-              <Grid data = {data} />
+      <div className="background custom-text">
+        
+          <div className= "flex justify-end">
+            <Timer />
           </div>
-        </div>
-        <div className="flex justify-center">
-          {/* <SubmitButton onClick={handeClick}/> */}
-          <SubmitButton />
-        </div>
+        
+          <div className="w-full mx-auto flex flex-row items-center">
+              <div className="basis-1/2">
+                <Canvas />
+              </div>
+              <div className="basis-1/2">
+                <p className='header'>CATEGORY IS</p> <br />
+                <p className='sub-header'>CATEGORY</p>
+                <Grid data = {data} />
+              </div>
+              <div className="flex justify-center brown-button">
+                <SubmitButton />
+              </div>
+          </div>
       </div>
-
     );
 }
 

@@ -19,22 +19,22 @@ function Room() {
 
     return (
         <div>
-            <div data-modal-target="lobby-modal" id="lobby-modal" className="bg-[#ece6c2] font-serif h-screen justify-center">
+            <div data-modal-target="lobby-modal" id="lobby-modal" className="background custom-text">
                 <Lobby modalId="lobby-modal" nextModalId="categories-modal" socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} />
             </div>
-            <div data-modal-target="categories-modal" id="categories-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+            <div data-modal-target="categories-modal" id="categories-modal" className="hidden background custom-text">
                 <Categories modalId="categories-modal" nextModalId="drawing-modal" />
             </div>
-            <div data-modal-target="drawing-modal" id="drawing-modal" className="hidden bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+            <div data-modal-target="drawing-modal" id="drawing-modal" className="hidden background custom-text">
                 <Drawing modalId="drawing-modal" nextModalId="voting-modal" />
             </div>
-            <div data-modal-target="voting-modal" id="voting-modal" className="hidden bg-background-color min-h-screen text-text">
+            <div data-modal-target="voting-modal" id="voting-modal" className="hidden background custom-text" >
                 <Voting modalId="voting-modal" nextModalId="results-modal" />
             </div>
-            <div data-modal-target="results-modal" id="results-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
+            <div data-modal-target="results-modal" id="results-modal" className="hidden background custom-text min-h-screen max-h-max" >
                 <Results modalId="results-modal" nextModalId="scoreboard-modal" />
             </div>
-            <div data-modal-target="scoreboard-modal" id="scoreboard-modal" className={`hidden bg-[#ece6c2] font-serif pb-4 px-6 min-h-screen max-h-max`} >
+            <div data-modal-target="scoreboard-modal" id="scoreboard-modal" className="hidden background custom-text pb-4 px-6 min-h-screen max-h-max" >
                 <Scoreboard modalId="scoreboard-modal" nextModalId="categories-modal" />
             </div>
         </div>

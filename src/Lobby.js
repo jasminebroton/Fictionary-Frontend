@@ -58,30 +58,31 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost}) {
     }
   }
 
-  return (
-    <div className="bg-[#ece6c2] font-serif h-screen justify-center">
-      <div>
-        <h1 className="text-[#6f5643] text-2xl pt-10 mb-0">Fictionary</h1>
-        <h1 className="text-[#6f5643] text-5xl pt-10 mb-5">Lobby</h1>
-        <p className="text-[#6f5643] text-3xl pt-0 mb-10">Room: {roomId}</p>
-      </div>
-      <div>
-        <ul className="grid grid-cols-2 gap-10">
-          {players.map((player, i) => (
-            <li className="text-[#6f5643] text-2xl pt-0 mb-0" key={i}>
-              {player.name} {player.isHost ? '(Host)' : ''}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <button onClick={handleLeaveClick} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Leave</button>
-        {isHost && (
-          <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="bg-[#cc6b49] text-[#ece6c2] w-20 p-2 mx-20 mt-10">Start</button>
-        )}
-      </div>
-    </div>
-  );
+    //procedurally generate table/list for users 
+    return (
+        <div className="background custom-text">
+            <div>
+                <h1 className="large-text">Fictionary</h1>
+                <h1 className="header mb-5">Lobby</h1>
+                <p className="sub-header pt-0 mb-10">Room: {roomId}</p>
+            </div>
+            <div>
+                <ul className = "grid grid-cols-2 gap-10" >
+                    {players.map((player, i) => (
+                      <li className="large-text pt-0 mb-0" key={i}>
+                        {player.name} {player.isHost ? '(Host)' : ''}
+                      </li>
+                    ))}
+                </ul>
+            </div>
+            <div>
+                <button onClick={handleLeaveClick} className="red-button mx-20 mt-10">Leave</button>
+                {isHost && (
+                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="blue-button mx-20 mt-10" >Start</button>
+                )}
+            </div>
+        </div>
+    );
 }
 
 export default Lobby;

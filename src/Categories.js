@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Categories() {
+function Categories({modalId, nextModalId}) {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
@@ -28,19 +28,22 @@ function Categories() {
 
     //placeholder until votes can be sent to the backend
     if(counter <= 0){
-        navigate(`/drawing/${roomId}`);
+        // navigate(`/drawing/${roomId}`);
+        document.getElementById("categories-ctn-btn").click();
     }
 
     return (
-        <div className="bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+        <div className="background custom-text">
+            <button type="button" onClick={() => document.getElementById("categories-ctn-btn").click()} className="" >&#40;this should not be visible&#41;</button>
+            <button id="categories-ctn-btn" data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="hidden"></button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
-                <p className="col-start-2 col-span-3 text-4xl">Fictionary</p>
-                <p className="bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 justify-self-center">{timer}</p>
+                <p className="header col-start-2 col-span-3">Fictionary</p>
+                <p className="timer">{timer}</p>
                 <p className="text-1xl col-start-2 col-span-3 row-start-2">Room: {roomId}</p>
             </div>
-            <form>
+            <form className="bg-[#6f5643] p-4">
                 <fieldset className="grid grid-cols-3 grid-rows-2 gap-x-3">
-                    <legend className="bg-[#6f5643] text-[#ece6c2] col-span-3 text-6xl p-4 mx-auto mt-10">Vote for a Category</legend>
+                    <legend className="header text-[#ece6c2] col-span-3">Vote for a Category</legend>
                     <p className="grid col-start-1 row-start-2">
                         <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_1">{categories[0].category}</label>
                         <input type="radio" name="category" id="category_1" value={categories[0].category} />

@@ -21,17 +21,11 @@ function Home() {
     }
     
     return (
-        <div className="bg-[#ece6c2] font-serif h-screen space-y-3">
-            <div className="text-[#6f5643] text-5xl pt-10 mb-32 ">Fictionary</div>
-            <div>
-                <button className="fic-button w-fit p-4 mx-auto" onClick={sendToHost} >Create a Room</button>
-            </div>
-            <div>
-                <button className="fic-button w-fit p-4 mx-auto" onClick={sendToGuest} >Join a Game</button>
-            </div>
-            <div>
-                <button className="fic-button w-fit p-4 mx-auto" onClick={sendToRules} >Rules</button>
-            </div>
+        <div className="background custom-text">
+            <div className="header mb-32">Fictionary</div>
+            <div className="red-button" onClick={sendToHost} >Create a Room</div>
+            <div className="yellow-button" onClick={sendToGuest} >Join a Game</div>
+            <div className="blue-button" onClick={sendToRules} >Rules</div>
         </div>
     )
 }

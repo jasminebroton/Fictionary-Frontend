@@ -1,8 +1,7 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Drawing(){
-    const navigate = useNavigate();
+function Drawing({modalId, nextModalId}){
     const { roomId } = useParams();
     const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -39,7 +38,10 @@ function Drawing(){
 
     //placeholder until the drawing can actually be sent to the backend
     function submitDrawing(){
-        navigate(`/voting/${roomId}`);
+        // navigate(`/voting/${roomId}`);
+    }
+    if(counter <= 0){
+        submitDrawing();
     }
 
     //placeholder until messages can be sent between clients
@@ -49,21 +51,21 @@ function Drawing(){
         return (
             <div>
                 {/* button for testing both views */}
-                <div className="bg-[#cc6b49] text-[#ece6c2] font-serif" onClick={swapView}>Switch to "Trickster" View</div>
+                <div className="bg-[#cc6b49] text-[#ece6c2] font-sans" onClick={swapView}>Switch to "Trickster" View</div>
 
-                <div className="grid grid-cols-4 grid-rows-3 bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+                <div className="background custom-text grid grid-cols-4 grid-rows-3">
                     <div className="col-start-2 col-span-2">
-                        <p className="text-3xl">Fictionary</p>
-                        <p className="text-1xl pb-4">Room: {roomId}</p>
-                        <p className="text-4xl">CATEGORY IS:</p>
-                        <p className="text-2xl">{category.category}</p>
+                        <p className="sub-header">Fictionary</p>
+                        <p className="pb-4">Room: {roomId}</p>
+                        <p className="header">CATEGORY IS:</p>
+                        <p className="large-text">{category.category}</p>
                     </div>
-                    <p className="bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 self-baseline justify-self-center">{timer}</p>
+                    <p className="timer">{timer}</p>
 
                     <form>
                         <section className="row-start-2">
                             <fieldset>
-                                <legend className="text-2xl mx-auto">Drawing Tools</legend>
+                                <legend className="large-text">Drawing Tools</legend>
                                 <p>
                                     <label for="tool_1">Thin</label>
                                     <input type="radio" name="tool" id="tool_1" value="thin" />
@@ -80,7 +82,7 @@ function Drawing(){
                         </section>
                         <section className="row-start-3 pt-5">
                             <p>
-                                <label className="text-2xl" for="colorPicker">Color Picker</label>
+                                <label className="large-text" for="colorPicker">Color Picker</label>
                                 <select id="colorPicker" name="color">
                                     <option value="red">Red</option>
                                     <option value="orange">Orange</option>
@@ -93,9 +95,9 @@ function Drawing(){
                         </section>
                     </form>
 
-                    <div className="col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
+                    <div className="canvas col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
 
-                    <div className="col-start-4 row-start-3 bg-[#6f5643] text-[#ece6c2] px-3 py-2 mx-auto justify-self-center self-center" onClick={submitDrawing}>Submit Drawing</div>
+                    <div data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
                 </div>
             </div>
         );
@@ -103,21 +105,21 @@ function Drawing(){
     return (
         <div>
             {/* button for testing both views */}
-            <div className="bg-[#73bda8] text-[#6f5643] font-serif" onClick={swapView}>Switch to "Artist" View</div>
+            <div className="bg-[#73bda8] text-[#6f5643] font-sans" onClick={swapView}>Switch to "Artist" View</div>
 
-            <div className="grid grid-cols-4 grid-rows-4 bg-[#ece6c2] text-[#6f5643] font-serif h-screen pt-10">
+            <div className="background custom-text grid grid-cols-4 grid-rows-4">
                 <div>
-                    <p className="text-3xl">Fictionary</p>
-                    <p className="text-1xl">Room: {roomId}</p>
+                    <p className="sub-headerl">Fictionary</p>
+                    <p>Room: {roomId}</p>
                 </div>
                 <div className="row-start-2">
-                    <p className="text-4xl">CATEGORY IS:</p>
-                    <p className="text-2xl">{category.category}</p>
+                    <p className="header">CATEGORY IS:</p>
+                    <p className="large-text">{category.category}</p>
                 </div>
-                <p className="row-start-3 bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 self-baseline justify-self-center">{timer}</p>
+                <p className="timer row-start-3">{timer}</p>
 
                 <div className="col-start-2 col-span-2 row-span-3">
-                    <div className="col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
+                    <div className="canvas col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
                     <p>User {artist} is drawing</p>
                 </div>
                 
@@ -127,16 +129,16 @@ function Drawing(){
                     <div>
                         <form>
                             <p>
-                                <input className="w-full" type="text" id="message" name="message" placeholder="Message..."/>
+                                <input className="text-entry-box w-full" type="text" id="message" name="message" placeholder="Message..."/>
                             </p>
                         </form>
-                        <div className="bg-[#73bda8] mx-auto w-1/5"onClick={sendMessage}>Send</div>
+                        <div className="blue-button"onClick={sendMessage}>Send</div>
                     </div>
                 </div>
 
                 <form className="row-start-4 col-span-4">
                     <p>
-                        <input className="w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here"/>
+                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here"/>
                     </p>
                 </form>
             </div>

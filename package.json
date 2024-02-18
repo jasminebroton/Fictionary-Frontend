@@ -4,13 +4,16 @@
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "flowbite": "^2.3.0",
+    "flowbite-react": "^0.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
     "short-unique-id": "^5.0.3",
+    "socket.io": "^4.7.4",
+    "socket.io-client": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -39,7 +42,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^14.2.1",
     "prettier": "3.2.4",
+    "setimmediate": "^1.0.5",
     "tailwindcss": "^3.4.1"
   }
 }

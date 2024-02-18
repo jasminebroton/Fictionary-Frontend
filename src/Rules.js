@@ -53,9 +53,9 @@ function Rules(){
     }
     
     return (
-        <div className="bg-[#ece6c2] font-serif h-screen">
-            <div className="text-[#6f5643] text-5xl pt-10">Fictionary</div>
-            <div className="text-[#6f5643] text-2xl pt-2 mb-28">How to Play</div>
+        <div className="background custom-text">
+            <div className="header">Fictionary</div>
+            <div className="large-text mb-28">How to Play</div>
             <div className="container mx-auto mb-16 box-border h-32 w-auto">
                 {isVisible ?  (
                     <h1 className="transition-opacity duration-500 opacity-100 rule-text display-linebreak">{RuleArray[activeRule]}</h1>
@@ -65,9 +65,9 @@ function Rules(){
                 
             </div>
             <div className="space-x-2">
-                <button className="fic-button rule-text" onClick={backwardRules}>Back</button>
-                <button className="fic-button rule-text" onClick={handleClick} >Return Home</button>
-                <button className="fic-button rule-text" onClick={forwardRules}>Next</button>
+                <button className="yellow-button rule-text" onClick={backwardRules}>Back</button>
+                <button className="brown-button rule-text" onClick={handleClick} >Return Home</button>
+                <button className="yellow-button rule-text" onClick={forwardRules}>Next</button>
             </div>
         </div>
 

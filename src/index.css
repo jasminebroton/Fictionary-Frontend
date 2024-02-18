@@ -71,4 +71,11 @@ code {
   .blue-button{
     @apply bg-[#73bda8] text-[#6f5643] hover:bg-[#499b83] w-1/6 p-2 my-2 mx-auto self-center;
   }
+
+  .rule-text {
+    @apply w-fit p-2 mx-auto text-center text-balance;
+  }
+  .display-linebreak {
+    white-space: pre-line;
+  }
 }

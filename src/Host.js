@@ -9,9 +9,9 @@ function Host() {
     {   
         const guestName = document.getElementById("name").value;
         if(guestName !== "") {
-            navigate(`/room/${roomId}`, {replace: true, state: {"host": true, "name": guestName}});
+            navigate(`/room/${roomId}`, {replace: false, state: {"host": true, "name": guestName}});
             // see issue #16
-            window.location.reload();
+            // window.location.reload();
         }
     }
 

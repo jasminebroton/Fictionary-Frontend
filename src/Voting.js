@@ -62,10 +62,15 @@ const Canvas = () => {
   );
 };
 
-function Voting({modalId, nextModalId}) {
+function Voting({setViewCurr, setViewNext}) {
     const { roomId } = useParams();
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
      
+    function handleNextBtn() {
+      setViewCurr(false);
+      setViewNext(true);
+    }
+
     return (
       <div className="background custom-text">
         
@@ -84,7 +89,7 @@ function Voting({modalId, nextModalId}) {
               </div>
               <div className="flex justify-center brown-button">
                 <div>
-                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" >
+                  <button onClick={handleNextBtn} type="button" >
                     Submit
                   </button>
                 </div>

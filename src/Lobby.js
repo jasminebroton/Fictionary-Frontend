@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, guestName}) {
+function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, guestName}) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   // ellen: guestName passed as a prop from Host.js and extracted in Room.js passed to Lobby.js as a prop
@@ -55,6 +55,8 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, gues
     // Emit startGame event if current user is the host
     if (isHost) {
       socket.emit('startGame', roomId);
+      setViewCurr(false);
+      setViewNext(true);
     } else {
       alert('Only the host can start the game.');
     }
@@ -80,7 +82,7 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, gues
             <div>
                 <button onClick={handleLeaveClick} className="red-button mx-20 mt-10">Leave</button>
                 {isHost && (
-                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="blue-button mx-20 mt-10" >Start</button>
+                  <button onClick={handleStartClick} className="blue-button mx-20 mt-10" >Start</button>
                 )}
             </div>
         </div>

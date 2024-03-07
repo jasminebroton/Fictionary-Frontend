@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Drawing({modalId, nextModalId}){
+function Drawing({setViewCurr, setViewNext}){
     const { roomId } = useParams();
     const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -39,6 +39,8 @@ function Drawing({modalId, nextModalId}){
     //placeholder until the drawing can actually be sent to the backend
     function submitDrawing(){
         // navigate(`/voting/${roomId}`);
+        setViewCurr(false);
+        setViewNext(true);
     }
     if(counter <= 0){
         submitDrawing();
@@ -97,7 +99,7 @@ function Drawing({modalId, nextModalId}){
 
                     <div className="canvas col-start-2 col-span-2 row-start-2 row-span-2">{canvas}</div>
 
-                    <div data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
+                    <div onClick={submitDrawing} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
                 </div>
             </div>
         );

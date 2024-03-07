@@ -15,9 +15,9 @@ function Guest() {
         const roomId = document.getElementById("id").value;
         
         if(roomId.length === 4 && guestName !== "")
-            navigate(`/room/${roomId}`, {replace: true, state: {"name": guestName}});
+            navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});
             // see issue #16
-            window.location.reload();
+            // window.location.reload();
     }
     function returnHome(){
         navigate('/');

@@ -1,19 +1,30 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 
-function Categories({setViewCurr, setViewNext}) {
-    const navigate = useNavigate();
+function Categories({viewCurr, setViewCurr, setViewNext}) {
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
-    const [counter, setCounter] = useState(60)
-    const [timer, setTimer] = useState("0:00")
+    const [counter, setCounter] = useState(60);
+    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+    // const [counter, setCounter] = useState(10);
+    const [timer, setTimer] = useState("0:00");
+
+    const handleNextBtn = useCallback (() => {
+        setViewNext(true);
+        setViewCurr(false);
+        setCounter(60);
+        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+        // setCounter(10);
+    }, [setViewCurr, setViewNext, setCounter]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCounter(counter => counter - 1)
+            if (viewCurr) {
+                setCounter(counter => counter - 1)
+            }
         }, 1000);
         return () => clearInterval(intervalId);
-    }, []);
+    }, [viewCurr, setCounter]);
 
     useEffect(() => {
         setTimer(() => {
@@ -24,18 +35,14 @@ function Categories({setViewCurr, setViewNext}) {
             }
             return (minutes + ":0" + seconds);
         });
-    });
+    }, [counter, setTimer]);
 
     //placeholder until votes can be sent to the backend
-    if(counter <= 0){
-        // navigate(`/drawing/${roomId}`);
-        handleNextBtn();
-    }
-
-    function handleNextBtn() {
-        setViewCurr(false);
-        setViewNext(true);
-    }
+    useEffect(() => {
+        if (counter <= 0) {
+            handleNextBtn();
+        }
+    }, [counter, viewCurr, handleNextBtn]);
 
     return (
         <div className="background custom-text">

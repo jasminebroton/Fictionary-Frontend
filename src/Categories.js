@@ -1,13 +1,16 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Categories({setViewCurr, setViewNext}) {
+function Categories({setViewCurr, setViewNext, players, setPlayers}) {
     const navigate = useNavigate();
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
     const [counter, setCounter] = useState(60)
     const [timer, setTimer] = useState("0:00")
+    const [playersInt, setPlayersInt] = useState(players.length);
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
 
+    
     useEffect(() => {
         const intervalId = setInterval(() => {
             setCounter(counter => counter - 1)
@@ -29,17 +32,33 @@ function Categories({setViewCurr, setViewNext}) {
     //placeholder until votes can be sent to the backend
     if(counter <= 0){
         // navigate(`/drawing/${roomId}`);
-        handleNextBtn();
-    }
-
-    function handleNextBtn() {
+        //handleNextBtn();
         setViewCurr(false);
         setViewNext(true);
     }
+    const handleClick = () => {
+        //decrement player
+        setPlayersInt(playersInt-1);
+        //add additional var so we can use it in real time
+        const updatedPlayersInt = playersInt-1;
+        console.log(updatedPlayersInt);
+        //disable buttons
+        setButtonDisabled(true);
+        if (updatedPlayersInt <= 0) {
+            console.log("getting stuck 1");
+            setViewCurr(false);
+            console.log("getting stuck 2");
+            setViewNext(true);
+            console.log("getting stuck 3 ");
+        }
+    };
+    //function handleNextBtn() {
+      //  setViewCurr(false);
+        //setViewNext(true);
+    //}
 
     return (
         <div className="background custom-text">
-            <button type="button" onClick={handleNextBtn} className="" >&#40;this should not be visible&#41;</button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
                 <p className="header col-start-2 col-span-3">Fictionary</p>
                 <p className="timer">{timer}</p>
@@ -62,8 +81,16 @@ function Categories({setViewCurr, setViewNext}) {
                     </p>
                 </fieldset>
             </form>
+            <div className = "flex justify-center brown-button">
+                <div>
+                    <button type="button" 
+                    onClick={handleClick} 
+                    disabled={isButtonDisabled}>
+                        Submit
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
-
 export default Categories;

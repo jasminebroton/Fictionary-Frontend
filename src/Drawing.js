@@ -1,15 +1,53 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-function Drawing({setViewCurr, setViewNext}){
+function Drawing({setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost}){
     const { roomId } = useParams();
-    const [artist, setArtist] = useState("user_3");
+    const [artist, setArtist] = useState(null);
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({category: "Animals"});
     const [view, setView] = useState(true)
     const [counter, setCounter] = useState(180)
     const [timer, setTimer] = useState("0:00")
     const [canvas, setCanvas] = useState(<canvas className="m-auto size-5/6 bg-white"></canvas>)
+    const playersCopy = [...players];
+    const usedIndexes = [];
+
+
+    const getRandomIndex = (maxIndex) => {
+        let randomNum;
+        do {
+        randomNum = Math.floor(Math.random() * maxIndex);
+        } while (usedIndexes.includes(randomNum));
+
+        usedIndexes.push(randomNum);
+        return randomNum;
+      };
+
+    const artistPicker = () => {
+        // pick a random player 0 to 
+       const randomNum = getRandomIndex(playersCopy.length - 1);
+        let artist = playersCopy[randomNum]; // Use 'const' to declare artist
+        if (artist) {
+          artist.isHost = true;
+        }
+        setArtist(artist);
+        // find previous host 
+        const previousHost = playersCopy.find((player) => player.isHost);
+        //take away previous host rights
+        if (previousHost) {
+          previousHost.isHost = false;
+        }
+        //update players array to be accurate
+        setPlayers(playersCopy);
+        setIsHost(artist ? artist.isHost : false);
+    };
+
+
+   /* useEffect(() => {
+        artistPicker();
+    }, []);      
+*/
 
     useEffect(() => {
         const intervalId = setInterval(() => {

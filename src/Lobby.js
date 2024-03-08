@@ -38,6 +38,7 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     newSocket.on('gameStarted', () => {
       // Conditional rendering for the game (i.e., Canvas, Results, Scoreboard)
       alert('Game Start');
+      handleNext();
     });
 
     return () => {
@@ -55,11 +56,14 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     // Emit startGame event if current user is the host
     if (isHost) {
       socket.emit('startGame', roomId);
-      setViewCurr(false);
-      setViewNext(true);
     } else {
       alert('Only the host can start the game.');
     }
+  }
+
+  function handleNext() {
+    setViewCurr(false);
+    setViewNext(true);
   }
 
     //procedurally generate table/list for users 

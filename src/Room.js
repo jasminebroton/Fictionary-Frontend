@@ -24,12 +24,11 @@ function Room() {
     const [viewScoreboard, setViewScoreboard] = useState(false);
 
     return (
-        // we have to wrap each component into a div with an ID so other components can find the ID and hide/show modals depending on game state
         <div>
             {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
-            {viewCategories && <Categories setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
-            {viewDrawing && <Drawing setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
-            {viewVoting && <Voting setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
+            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
+            {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
+            {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
             {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }
         </div>

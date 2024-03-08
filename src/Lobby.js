@@ -55,11 +55,15 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     // Emit startGame event if current user is the host
     if (isHost) {
       socket.emit('startGame', roomId);
-      setViewCurr(false);
-      setViewNext(true);
+      handleNext();
     } else {
       alert('Only the host can start the game.');
     }
+  }
+
+  function handleNext() {
+    setViewCurr(false);
+    setViewNext(true);
   }
 
     //procedurally generate table/list for users 

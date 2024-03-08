@@ -1,22 +1,26 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-function Drawing({setViewCurr, setViewNext}){
+function Drawing({viewCurr, setViewCurr, setViewNext}){
     const { roomId } = useParams();
     const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({category: "Animals"});
-    const [view, setView] = useState(true)
-    const [counter, setCounter] = useState(180)
-    const [timer, setTimer] = useState("0:00")
+    const [view, setView] = useState(true);
+    const [counter, setCounter] = useState(180);
+    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+    // const [counter, setCounter] = useState(10);
+    const [timer, setTimer] = useState("0:00");
     const [canvas, setCanvas] = useState(<canvas className="m-auto size-5/6 bg-white"></canvas>)
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCounter(counter => counter - 1)
+            if (viewCurr) {
+                setCounter(counter => counter - 1);
+            }
         }, 1000);
         return () => clearInterval(intervalId);
-    }, []);
+    }, [viewCurr, setCounter]);
 
     useEffect(() => {
         setTimer(() => {
@@ -27,7 +31,7 @@ function Drawing({setViewCurr, setViewNext}){
             }
             return (minutes + ":0" + seconds);
         });
-    });
+    }, [counter, setTimer]);
 
     //temporary function to test both views at once
     function swapView() {
@@ -37,14 +41,20 @@ function Drawing({setViewCurr, setViewNext}){
     }
 
     //placeholder until the drawing can actually be sent to the backend
-    function submitDrawing(){
+    const submitDrawing = useCallback(() => {
         // navigate(`/voting/${roomId}`);
-        setViewCurr(false);
         setViewNext(true);
-    }
-    if(counter <= 0){
-        submitDrawing();
-    }
+        setViewCurr(false);
+        setCounter(180);
+        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+        // setCounter(10);
+    }, [setViewCurr, setViewNext, setCounter]);
+
+    useEffect(() => {
+        if(counter <= 0){
+            submitDrawing();
+        }
+    }, [counter, viewCurr, submitDrawing]);
 
     //placeholder until messages can be sent between clients
     function sendMessage(){}

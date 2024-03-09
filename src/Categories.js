@@ -43,14 +43,14 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
 
     //placeholder until votes can be sent to the backend
 
-    if(counter <= 0){
-        // navigate(`/drawing/${roomId}`);
-        //handleNextBtn();
-        setViewCurr(false);
-        setViewNext(true);
-    }
+    useEffect(() => {
+        if (counter <= 0) {
+            handleNextBtn();
+        }
+    }, [counter, viewCurr, handleNextBtn]);
     const handleClick = () => {
-        //decrement player
+        handleNextBtn();
+      /*  //decrement player
         setPlayersInt(playersInt-1);
         //add additional var so we can use it in real time
         const updatedPlayersInt = playersInt-1;
@@ -60,6 +60,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
         if (updatedPlayersInt <= 0) {
             handleNextBtn();
         }
+        */
     };
 
     useEffect(() => {

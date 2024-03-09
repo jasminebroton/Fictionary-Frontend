@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
-function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost}){
+function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost, usedIndexes, setUsedIndexes}){
+
     const { roomId } = useParams();
     const [artist, setArtist] = useState(null);
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -13,43 +14,44 @@ function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHos
     const [timer, setTimer] = useState("0:00");
     const [canvas, setCanvas] = useState(<canvas className="m-auto size-5/6 bg-white"></canvas>)
     const playersCopy = [...players];
-    const usedIndexes = [];
+    //moved to Room.js
+    //const [usedIndexes, setUsedIndexes] = useState([]);
+    
 
 
     const getRandomIndex = (maxIndex) => {
-        let randomNum;
+        let ranNum;
         do {
-        randomNum = Math.floor(Math.random() * maxIndex);
-        } while (usedIndexes.includes(randomNum));
+        ranNum = Math.floor(Math.random() * maxIndex) + 1;
+        } while (usedIndexes.includes(ranNum));
 
-        usedIndexes.push(randomNum);
-        return randomNum;
+        setUsedIndexes(usedIndexes => [...usedIndexes, ranNum]);
+        return ranNum;
       };
 
     const artistPicker = () => {
-        // pick a random player 0 to 
-       const randomNum = getRandomIndex(playersCopy.length - 1);
-        let artist = playersCopy[randomNum]; // Use 'const' to declare artist
-        if (artist) {
-          artist.isHost = true;
+        let randomNum = getRandomIndex(playersCopy.length);
+        let newArtist = playersCopy[randomNum-1]; 
+        let previousHost = playersCopy.find((player) => player.isHost);
+        setArtist(newArtist);
+        if (newArtist) {
+          newArtist.isHost = true;
         }
-        setArtist(artist);
-        // find previous host 
-        const previousHost = playersCopy.find((player) => player.isHost);
+
+        setIsHost(artist ? artist.isHost : false);
+        
         //take away previous host rights
         if (previousHost) {
           previousHost.isHost = false;
         }
         //update players array to be accurate
-        setPlayers(playersCopy);
-        setIsHost(artist ? artist.isHost : false);
+        setPlayers([...playersCopy]);
+        setIsHost(previousHost.isHost);
     };
 
-
-   /* useEffect(() => {
+    useEffect(() => {
         artistPicker();
-    }, []);      
-*/
+      }, []);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -89,7 +91,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHos
     }, [setViewCurr, setViewNext, setCounter]);
 
     useEffect(() => {
-        if(counter <= 0){
+        if(counter <= 0) {
             submitDrawing();
         }
     }, [counter, viewCurr, submitDrawing]);

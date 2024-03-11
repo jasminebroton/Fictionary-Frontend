@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
-function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost, usedIndexes, setUsedIndexes}){
+function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost, usedIndexes, setUsedIndexes, artist, setArtist}){
 
     const { roomId } = useParams();
-    const [artist, setArtist] = useState(null);
+    //moved to Room.js
+    //const [artist, setArtist] = useState(null);
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({category: "Animals"});
     const [view, setView] = useState(true);
@@ -13,12 +14,12 @@ function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHos
     // const [counter, setCounter] = useState(10);
     const [timer, setTimer] = useState("0:00");
     const [canvas, setCanvas] = useState(<canvas className="m-auto size-5/6 bg-white"></canvas>)
-    const playersCopy = [...players];
+    //const playersCopy = [...players];
     //moved to Room.js
     //const [usedIndexes, setUsedIndexes] = useState([]);
     
 
-
+/*
     const getRandomIndex = (maxIndex) => {
         let ranNum;
         do {
@@ -52,7 +53,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHos
     useEffect(() => {
         artistPicker();
       }, []);
-
+*/
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (viewCurr) {

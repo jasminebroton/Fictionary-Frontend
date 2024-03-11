@@ -9,7 +9,7 @@ import Voting from "./Voting.js";
 import Results from "./Results.js";
 import Scoreboard from './Scoreboard';
 import FinalScore from './FinalScore.js';
-
+import Artist from './Artist.js';
 
 function Room() {
     const location = useLocation();
@@ -17,17 +17,7 @@ function Room() {
     const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
     //const[players, setPlayers] = useState([]);
-    const [players, setPlayers] = useState([
-        { name: 'Player 1', isHost: true },
-        { name: 'Player 2', isHost: false },
-        { name: 'Player 3', isHost: false },
-        { name: 'Player 4', isHost: false },
-        { name: 'Player 5', isHost: false },
-        { name: 'Player 6', isHost: false },
-        { name: 'Player 7', isHost: false },
-        { name: 'Player 8', isHost: false },
-        { name: 'Player 9', isHost: false },
-      ]);
+    const [players, setPlayers] = useState([]);
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
     const [viewCategories, setViewCategories] = useState(false);
@@ -38,17 +28,20 @@ function Room() {
     const [viewFinal, setViewFinalScore] = useState(false);
     const [roundCount, setRoundCount] = useState(0);
     const [usedIndexes, setUsedIndexes] = useState([]);
+    const [artist, setArtist] = useState(null);
+    const [viewArtist, setViewArtist] = useState(false);
 
     return (
         <div>
 
             {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} players={players} setPlayers={setPlayers}/>}
-            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} />}
-            {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes} setUsedIndexes={setUsedIndexes}/>}
+            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewArtist} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} />}
+            {viewArtist && <Artist viewCurr={viewArtist} viewSetCurr={setViewArtist} setViewNext={setViewDrawing} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes}setUsedIndexes= {setUsedIndexes} artist={artist} setArtist={setArtist}/>}
+            {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes} setUsedIndexes={setUsedIndexes} artist={artist} setArtist={setArtist}/>}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} roundCount={roundCount} setRoundCount={setRoundCount} /> }
             {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext= {setViewDrawing} setViewNextRound={setViewCategories} setViewNextFinalScore={setViewFinalScore} roundCount={roundCount} usedIndexes={usedIndexes} players={players} setRoundCount={setRoundCount} setUsedIndexes={setUsedIndexes} /> }
-            {viewFinal && <FinalScore setViewCurr={setViewFinalScore} setViewNext={setViewLobby} />}
+            {viewFinal && <FinalScore viewCurr={viewFinal} setViewCurr={setViewFinalScore} setViewNext={setViewLobby} />}
         </div>
     );  
 }

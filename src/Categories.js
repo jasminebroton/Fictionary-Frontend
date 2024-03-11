@@ -11,7 +11,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
     const [timer, setTimer] = useState("0:00");
     const [playersInt, setPlayersInt] = useState(players.length);
     const [isButtonDisabled, setButtonDisabled] = useState(false);
-
+   
     const handleNextBtn = useCallback (() => {
         setViewNext(true);
         setViewCurr(false);
@@ -48,9 +48,10 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
             handleNextBtn();
         }
     }, [counter, viewCurr, handleNextBtn]);
+    
     const handleClick = () => {
-        handleNextBtn();
-      /*  //decrement player
+        //handleNextBtn();
+       //decrement player
         setPlayersInt(playersInt-1);
         //add additional var so we can use it in real time
         const updatedPlayersInt = playersInt-1;
@@ -60,7 +61,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
         if (updatedPlayersInt <= 0) {
             handleNextBtn();
         }
-        */
+    
     };
 
     useEffect(() => {

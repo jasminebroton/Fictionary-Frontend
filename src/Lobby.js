@@ -59,6 +59,13 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     } else {
       alert('Only the host can start the game.');
     }
+    // please don't remove, does not break anything but needed for testing, see issue #43
+    // npm start -> NODE_ENV set to "development"
+    // npm build -> NODE_ENV set to "production"
+    // npm test -> NODE_ENV set to "test"
+    if (process.env.NODE_ENV === "test") {
+      handleNext();
+    }
   }
 
   function handleNext() {

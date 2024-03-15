@@ -49,8 +49,9 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
         }
     }, [counter, viewCurr, handleNextBtn]);
     
+    //this makes it so the page will only nav if all users have submitted
     const handleClick = () => {
-        //handleNextBtn();
+        handleNextBtn(); /*
        //decrement player
         setPlayersInt(playersInt-1);
         //add additional var so we can use it in real time
@@ -61,7 +62,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
         if (updatedPlayersInt <= 0) {
             handleNextBtn();
         }
-    
+    */
     };
 
     useEffect(() => {
@@ -72,6 +73,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
 
     return (
         <div className="background custom-text">
+            <button type="button" onClick={handleNextBtn} className="" >&#40;this should not be visible&#41;</button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
                 <p className="header col-start-2 col-span-3">Fictionary</p>
                 <p className="timer">{timer}</p>

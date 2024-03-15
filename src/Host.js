@@ -24,7 +24,7 @@ function Host() {
             <div className="header mb-20">Fictionary</div>
             
             <div className="sub-header">Enter Your Name (Host): </div>
-            <div className="text-entry-box"><input type="text" id="name" size={15}></input></div>
+            <div><input type="text" id="name" placeholder='Name' className='text-entry-box'></input></div>
             
             <div>
             <div className="blue-button" onClick={toLobby}>Enter</div> 

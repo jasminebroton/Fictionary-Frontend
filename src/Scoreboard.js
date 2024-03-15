@@ -11,7 +11,7 @@ function Scoreboard({setViewCurr, setViewNext, setViewNextRound, setViewFinalSco
         //setViewNext(true);
 
         // if 3 rounds have occured
-        if(roundCount == 3 ) {
+        if(roundCount == 3) {
             setViewFinalScore(true);
         // if ever player has gotten a turn to draw, start next round 
         } else if(players.length == usedIndexes.length) {

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, guestName}) {
+function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, guestName, players, setPlayers}) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   // ellen: guestName passed as a prop from Host.js and extracted in Room.js passed to Lobby.js as a prop
   // const { roomId, guestName } = useParams();
-  const [players, setPlayers] = useState([]);
+  //const [players, setPlayers] = useState([]);
   // ellen: moved to Room.js so each game page can access these
   // const [socket, setSocket] = useState(null);
   // const [isHost, setIsHost] = useState(false);
+  const location = useLocation();
+
 
   useEffect(() => {
     // Initialize socket connection
@@ -42,18 +44,17 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     });
 
     return () => {
-      newSocket.disconnect();
+        newSocket.disconnect();
     };
   }, [navigate, roomId, guestName]); // Removed WebSocketID from the dependency array as it's no longer needed
 
-  
   function handleLeaveClick() {
     // Navigate back to home or the previous page
     navigate('/');
   }
 
   function handleStartClick() {
-    // Emit startGame event if current user is the host
+    handleNext(); // to test without the backend
     if (isHost) {
       socket.emit('startGame', roomId);
     } else {

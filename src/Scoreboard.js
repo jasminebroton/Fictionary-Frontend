@@ -1,15 +1,28 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-function Scoreboard({setViewCurr, setViewNext}) {
+function Scoreboard({setViewCurr, setViewNext, setViewNextRound, setViewFinalScore, setViewThisRound, roundCount, usedIndexes, players, setRoundCount, setUsedIndexes}) {
     const { roomId } = useParams();
     const [data, setData] = useState([{user: "user_9", points: 5, rank: "1st"}, {user: "user_1", points: 3, rank: "2nd"}, {user: "user_6", points: 2, rank: "3rd"}, {user: "user_3", points: 1, rank: "4th"}, {user: "user_2", points: 0, rank: "5th"}, {user: "user_4", points: 0, rank: "5th"}, {user: "user_5", points: 0, rank: "5th"}, {user: "user_7", points: 0, rank: "5th"}, {user: "user_8", points: 0, rank: "5th"}]);
     const [nextArtist, setNextArtist] = useState("user_4");
 
     function handleNextBtn() {
         setViewCurr(false);
-        setViewNext(true);
-    }
+        //setViewNext(true);
+
+        // if 3 rounds have occured
+        if(roundCount == 3) {
+            setViewFinalScore(true);
+        // if ever player has gotten a turn to draw, start next round 
+        } else if(players.length == usedIndexes.length) {
+            setRoundCount(roundCount + 1);
+            setUsedIndexes([]);
+            setViewNextRound(true);
+        } else {
+            setViewNext(true);
+        }
+        }
+    
 
     return (
         <div className="background custom-text pb-4 px-6 min-h-screen max-h-max">

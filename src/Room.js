@@ -15,6 +15,9 @@ function Room() {
     const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
 
+    //round counter
+    const [round, setRound] = useState(0);
+
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
     const [viewCategories, setViewCategories] = useState(false);
@@ -26,7 +29,7 @@ function Room() {
     return (
         <div>
             {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
-            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
+            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} isHost={isHost} setIsHost={setIsHost} round={round} setRound={setRound}/>}
             {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }

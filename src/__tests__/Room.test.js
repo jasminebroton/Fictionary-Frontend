@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import App from "../App.js";
 import "setimmediate";
+// when running npm test, NODE_ENV is set to "test"
 
 test("loads home page", async () => {
     render(<App />);
@@ -35,6 +36,7 @@ test("loads lobby page", async () => {
 
 test("loads categories page", async () => {
     render(<App />);
+
     await userEvent.click(screen.getByText("Start"));
 
     // testing Categories.js component

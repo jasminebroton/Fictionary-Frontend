@@ -12,10 +12,10 @@ function Scoreboard({setViewCurr, setViewNext}) {
     }
 
     return (
-        <div className="background custom-text pb-4 px-6 min-h-screen max-h-max">
+        <div className="background custom-text pt-4 pb-4 px-6 min-h-screen max-h-max">
             {/* display room and page title for testing */}
-            <p>room: {roomId} &#40;scoreboard&#41;</p> 
-            <p className="large-text text-center ml-4">Fictionary</p>
+             
+            
             <div className="grid lg:grid-cols-2 lg:grid-rows-1 sm:grid-rows-2 p-0 m-0 justify-center items-center justify-items-stretch">
                 <div className="flex flex-col justify-center items-center">
                     <p className="large-text pb-2">Scores:</p>
@@ -33,11 +33,13 @@ function Scoreboard({setViewCurr, setViewNext}) {
                     </table>
                 </div>
                 <div className="flex flex-col justify-center items-center mr-6 my-6 gap-6">
+                    <p className="text-2x1">room: {roomId} &#40;scoreboard&#41;</p>
+                    <div className="large-text-nomargin ml-4">Fictionary</div>
                     <div className="bg-[#d2a24c] flex flex-col justify-evenly w-5/12 aspect-square">
                         <p className="large-text">Next Artist:</p>
                         <p className="large-text">{nextArtist}</p>
                     </div>
-                    <button onClick={handleNextBtn} type="button" className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
+                    <button onClick={handleNextBtn}  className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

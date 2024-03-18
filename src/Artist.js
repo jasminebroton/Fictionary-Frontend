@@ -64,11 +64,11 @@ function Artist({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost
     }, [count]);
 
     return(
-        <div className="background custom-text flex flex-col space-y-44 text-center py-12 text-6xl ">
+        <div class="background custom-text flex flex-col space-y-44 text-center py-12 text-6xl ">
            <button id="nextButton" data-testid= "next" onClick={handleNext} style={{ display: 'none' }}>next</button>
           <div>
             <div> NEXT ARTIST IS <br /> <br /> </div>
-               <div className="animate-bounce">{artist && artist.name} </div>
+               <div class="animate-bounce">{artist && artist.name} </div>
             </div>
                {count !== null && (
                 <>

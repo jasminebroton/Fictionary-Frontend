@@ -17,16 +17,9 @@ function Room() {
     const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
     //const[players, setPlayers] = useState([]);
-   // const [players, setPlayers] = useState([]);
-    // use this for testing if need be
-    
     const [players, setPlayers] = useState([
-  { name: 'Player1', isHost: true },
-  { name: 'Player2', isHost: false },
-  { name: 'Player3', isHost: false },
-]);
-
-
+        {name: 'Player1', isHost: true}
+    ]);
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
     const [viewCategories, setViewCategories] = useState(false);

@@ -48,7 +48,7 @@ test("loads drawing page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
-
+    await userEvent.click(screen.getByTestId("next"));
     // testing Drawing.js component
     expect(screen.getByText("Drawing Tools"));
     await userEvent.click(screen.getByText("Submit Drawing"));
@@ -58,6 +58,7 @@ test("loads voting page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByTestId("next")); 
     await userEvent.click(screen.getByText("Submit Drawing"));
 
     // testing Voting.js component
@@ -69,6 +70,7 @@ test("loads results page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByTestId("next"));
     await userEvent.click(screen.getByText("Submit Drawing"));
     await userEvent.click(screen.getByText("Submit"));
 
@@ -81,20 +83,34 @@ test("loads scoreboard page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByTestId("next"));
     await userEvent.click(screen.getByText("Submit Drawing"));
     await userEvent.click(screen.getByText("Submit"));
     await userEvent.click(screen.getByTestId("results-ctn-btn"));
 
     // testing Scoreboard.js component
     expect(screen.getByText("Scores:"));
-    expect(screen.getByText("Next Artist:"));
     await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
 });
 
 test("loads new round (back to categories page)", async () => {
     render(<App />);
+    //this simulates a full round being completed in a room with 3 players
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByTestId("next"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+    await userEvent.click(screen.getByText("Submit"));
+    await userEvent.click(screen.getByTestId("results-ctn-btn"));
+    await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
+
+    await userEvent.click(screen.getByTestId("next"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+    await userEvent.click(screen.getByText("Submit"));
+    await userEvent.click(screen.getByTestId("results-ctn-btn"));
+    await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
+
+    await userEvent.click(screen.getByTestId("next"));
     await userEvent.click(screen.getByText("Submit Drawing"));
     await userEvent.click(screen.getByText("Submit"));
     await userEvent.click(screen.getByTestId("results-ctn-btn"));

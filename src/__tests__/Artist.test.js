@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import userEvent from "@testing-library/user-event";
+import { fireEvent, render, screen, waitFor, act } from '@testing-library/react';
 import Artist from '../Artist.js';
 
 jest.useFakeTimers();
@@ -33,29 +32,38 @@ const TestComponent = () => {
       />
     );
   };
-  
+ 
   test('artist component', async () => {
+    act(() => {
+    
     render(<TestComponent />);
+    });
     // Your test assertions go here
     expect(screen.getByText('NEXT ARTIST IS'));
     expect(screen.getByText('Player3'));
-    jest.advanceTimersByTime(2000); 
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
     await waitFor(() => {
       expect(screen.getByText('GET READY TO DRAW IN')).toBeInTheDocument();
     });  
-    //expect(screen.getByText('GET READY TO DRAW IN'));
-    jest.advanceTimersByTime(1000);
+    
     expect(screen.getByText('3'));
-    jest.advanceTimersByTime(1000);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+
     await waitFor(() => {
       expect(screen.getByText('2')).toBeInTheDocument();
     });  
-    jest.advanceTimersByTime(1000);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+
     await waitFor(() => {
       expect(screen.getByText('1')).toBeInTheDocument();
     });  
 
-    
 
     fireEvent.click(screen.getByTestId("next"));
   });

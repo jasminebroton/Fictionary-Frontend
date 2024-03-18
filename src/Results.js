@@ -6,15 +6,15 @@ function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlaye
     const category = "a nothingburger";
     // Note: moved variables to Room.js
     // const [guesses, setGuesses] = useState([
-        // {userId: "user_1", votes: 3, voterIds: [{voterId: "user_3"}, {voterId: "user_6"}, {voterId: "user_9"}]},
-        // {userId: "user_2", votes: 0, voterIds: []},
-        // {userId: "user_3", votes: 0, voterIds: []},
-        // {userId: "user_4", votes: 0, voterIds: []},
-        // {userId: "user_5", votes: 0, voterIds: []},
-        // {userId: "user_6", votes: 1, voterIds: [{voterId: "user_5"}]},
-        // {userId: "user_7", votes: 0, voterIds: []},
-        // {userId: "user_8", votes: 0, voterIds: []},
-        // {userId: "user_9", votes: 4, voterIds: [{voterId: "user_2"}, {voterId: "user_4"}, {voterId: "user_7"}]}
+    //     {userId: "user_1", votes: 3, voterIds: [{voterId: "user_3"}, {voterId: "user_6"}, {voterId: "user_9"}]},
+    //     {userId: "user_2", votes: 0, voterIds: []},
+    //     {userId: "user_3", votes: 0, voterIds: []},
+    //     {userId: "user_4", votes: 0, voterIds: []},
+    //     {userId: "user_5", votes: 0, voterIds: []},
+    //     {userId: "user_6", votes: 1, voterIds: [{voterId: "user_5"}]},
+    //     {userId: "user_7", votes: 0, voterIds: []},
+    //     {userId: "user_8", votes: 0, voterIds: []},
+    //     {userId: "user_9", votes: 4, voterIds: [{voterId: "user_2"}, {voterId: "user_4"}, {voterId: "user_7"}]}
     // ]);
     // const [players, setPlayers] = useState([
     //     {id: "user_1", name: "user_one", isHost: true, totalScore: 6, trickScore: 0, artScore: 6},
@@ -65,23 +65,10 @@ function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlaye
         );
     }
 
-    function ScoreMessage() {
-        if(guesses.length > 0){
-            <div className="mb-4">
-                {guesses.map(guess => guess.votes > 0 ? <div key={guess.userId}>{players.find((player) => player.id === guess.userId).name} scored {players.find((player) => player.id === guess.userId).isHost ? guess.votes * 2: guess.votes} {players.find((player) => player.id === guess.userId).isHost ? "artist" : "trickster"} points.</div> : <div></div>)}
-            </div>
-        }
-        else{
-            return(
-                <div className="mb-4">No one made any guesses :{"("}</div>
-            );
-        }
-    }
-
     function BonusMessage() {
         if(correct.length > 0){
             return (
-                <p className="sub-header">Your Score: {score}</p>
+                <p className="sub-header, text-[#ece6c2]">{correct.join(", ")} earned bonus points for guessing correctly.</p>
             );
         }
         else{
@@ -114,7 +101,9 @@ function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlaye
                     </div>
                     {/* status board(?) */}
                     <div className="flex flex-col shrink text-left bg-[#6f5643] text-[#ece6c2] px-4 py-2 max-w-96">
-                        <ScoreMessage />
+                        <div className="mb-4">
+                            {guesses.map(guess => guess.votes != undefined && guess.votes > 0 ? <div key={guess.userId}>{players.find((player) => player.id === guess.userId).name} scored {players.find((player) => player.id === guess.userId).isHost ? guess.votes * 2: guess.votes} {players.find((player) => player.id === guess.userId).isHost ? "artist" : "trickster"} points.</div> : <div></div>)}
+                        </div>
                         <BonusMessage className="flex shrink"/>
                     </div>
                     <p className="sub-header">Your Score: {score}</p>

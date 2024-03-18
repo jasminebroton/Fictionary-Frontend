@@ -46,7 +46,7 @@ function Scoreboard({setViewCurr, setViewNext, players, setPlayers}) {
                 }
             }
             setBestArist(players[0].name);
-    
+
             for(let i = 0; i < players.length; i++){
                 for(let j = 0; j < players.length; j++){
                     if(players[j].totalScore < players[i].totalScore){

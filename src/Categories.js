@@ -46,12 +46,15 @@ function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round
     }, [counter, viewCurr, handleNextBtn]);
 
 
-    //For testing only
-    if(process.env.NODE_ENV ==="test"){
-        setCategories(["food","clothing","animals"]);
-    }
+    
+
     //Category retrieval 
     useEffect(() => {
+        //For testing only
+        if(process.env.NODE_ENV ==="test"){
+            setCategories(["food","clothing","animals"]);
+        }
+
         setRound(round+1);
         //converts roomID to a number, add round
         function seedGeneration() {

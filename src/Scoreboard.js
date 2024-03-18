@@ -8,8 +8,6 @@ function Scoreboard({setViewCurr, setViewNext, setViewNextRound, setViewFinalSco
 
     function handleNextBtn() {
         setViewCurr(false);
-        //setViewNext(true);
-
         // if 3 rounds have occured
         if(roundCount == 3) {
             setViewFinalScore(true);
@@ -44,12 +42,6 @@ function Scoreboard({setViewCurr, setViewNext, setViewNextRound, setViewFinalSco
                             <td className="borders table-data">{d.points} {d.points == 1 ? `pt` : `pts`}</td>
                         </tr>)}
                     </table>
-                </div>
-                <div className="flex flex-col justify-center items-center mr-6 my-6 gap-6">
-                    <div className="bg-[#d2a24c] flex flex-col justify-evenly w-5/12 aspect-square">
-                        <p className="large-text">Next Artist:</p>
-                        <p className="large-text">{nextArtist}</p>
-                    </div>
                     <button onClick={handleNextBtn} type="button" className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
                 </div>
             </div>

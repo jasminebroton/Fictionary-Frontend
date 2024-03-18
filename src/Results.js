@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlayers, guesses, setGuesses }) {
+function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
     const { roomId } = useParams();
     const category = "a nothingburger";
     // Note: moved variables to Room.js

@@ -27,7 +27,7 @@ function Room() {
         <div>
             {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
             {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
-            {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
+            {viewDrawing && <Drawing socket={socket} viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
             {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }

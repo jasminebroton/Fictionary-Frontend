@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-function Results({setViewCurr, setViewNext }) {
+function Results({setViewCurr, setViewNext}) {
     const { roomId } = useParams();
     const category = "a nothingburger";
     const [guesses, setGuesses] = useState(["user_1", "user_2", "user_3", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
@@ -23,6 +23,7 @@ function Results({setViewCurr, setViewNext }) {
         setViewCurr(false);
         setViewNext(true);
     }
+
     return(
         <div className="background custom-text min-h-screen max-h-max">
             {/* display room and page title for testing */}

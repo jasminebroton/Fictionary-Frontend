@@ -1,17 +1,14 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
-
-function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
+function Categories({viewCurr, setViewCurr, setViewNext}) {
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
     const [counter, setCounter] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [counter, setCounter] = useState(10);
     const [timer, setTimer] = useState("0:00");
-    const [playersInt, setPlayersInt] = useState(players.length);
-    const [isButtonDisabled, setButtonDisabled] = useState(false);
-   
+
     const handleNextBtn = useCallback (() => {
         setViewNext(true);
         setViewCurr(false);
@@ -20,7 +17,6 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
         // setCounter(10);
     }, [setViewCurr, setViewNext, setCounter]);
 
-    
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (viewCurr) {
@@ -42,29 +38,6 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
     }, [counter, setTimer]);
 
     //placeholder until votes can be sent to the backend
-
-    useEffect(() => {
-        if (counter <= 0) {
-            handleNextBtn();
-        }
-    }, [counter, viewCurr, handleNextBtn]);
-    
-    //this makes it so the page will only nav if all users have submitted
-    const handleClick = () => {
-        handleNextBtn(); /*
-       //decrement player
-        setPlayersInt(playersInt-1);
-        //add additional var so we can use it in real time
-        const updatedPlayersInt = playersInt-1;
-        console.log(updatedPlayersInt);
-        //disable buttons
-        setButtonDisabled(true);
-        if (updatedPlayersInt <= 0) {
-            handleNextBtn();
-        }
-    */
-    };
-
     useEffect(() => {
         if (counter <= 0) {
             handleNextBtn();
@@ -96,16 +69,8 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers}) {
                     </p>
                 </fieldset>
             </form>
-            <div className = "flex justify-center brown-button">
-                <div>
-                    <button type="button" 
-                    onClick={handleClick} 
-                    disabled={isButtonDisabled}>
-                        Submit
-                    </button>
-                </div>
-            </div>
         </div>
     );
 }
+
 export default Categories;

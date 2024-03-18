@@ -14,6 +14,8 @@ function Room() {
     const [isHost, setIsHost] = useState(location.state?.host ? true : false);
     const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
+    const [players, setPlayers] = useState([]);
+    const [guesses, setGuesses] = useState([]);
 
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
@@ -25,14 +27,14 @@ function Room() {
 
     return (
         <div>
-            {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
+            {viewLobby && <Lobby players={players} setPlayers={setPlayers} socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
             {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
             {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
-            {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
-            {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }
+            {viewResults && <Results players={players} setPlayers={setPlayers} guesses={guesses} setGuesses={setGuesses} socket={socket} setSocket={setSocket} setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
+            {viewScoreboard && <Scoreboard players={players} setPlayers={setPlayers} setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }
         </div>
-    );  
+    );
 }
 
 export default Room;

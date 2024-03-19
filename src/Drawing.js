@@ -8,7 +8,7 @@ var theSocket;
 var globalBrushSize;
 var globalPaintColor;
 
-function Drawing({viewCurr, setViewCurr, setViewNext, socket}){
+function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist, setArtist, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes}){
     const { roomId } = useParams();
     const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);

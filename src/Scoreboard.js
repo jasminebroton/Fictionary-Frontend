@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-function Scoreboard({setViewCurr, setViewNext, players, setPlayers}) {
+function Scoreboard({setViewCurr, setViewNext, players, setPlayers, setViewNextRound, setViewFinalScore, roundCount, usedIndexes, setRoundCount, setUsedIndexes}) {
     const { roomId } = useParams();
     // Note: moved variables to Room.js
     // const [players, setPlayers] = useState([
@@ -96,8 +96,18 @@ function Scoreboard({setViewCurr, setViewNext, players, setPlayers}) {
 
     function handleNextBtn() {
         setViewCurr(false);
-        setViewNext(true);
-    }
+        // if 3 rounds have occured
+        if(roundCount == 3) {
+            setViewFinalScore(true);
+        // if ever player has gotten a turn to draw, start next round 
+        } else if(players.length == usedIndexes.length) {
+            setRoundCount(roundCount + 1);
+            setUsedIndexes([]);
+            setViewNextRound(true);
+        } else {
+            setViewNext(true);
+        }
+        }
 
     return (
         <div className="background custom-text pb-4 px-6 min-h-screen max-h-max">

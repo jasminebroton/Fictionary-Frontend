@@ -25,9 +25,10 @@ function Room() {
 
     return (
         <div>
-            {viewLobby && <Lobby socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
-            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewDrawing} />}
-            {viewDrawing && <Drawing socket={socket} viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} />}
+            {viewLobby && <Lobby players={players} setPlayers={setPlayers} socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
+            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewArtist} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost}/>}
+            {viewArtist && <Artist viewCurr={viewArtist} setViewCurr={setViewArtist} setViewNext={setViewDrawing} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes}setUsedIndexes= {setUsedIndexes} artist={artist} setArtist={setArtist}/>}
+            {viewDrawing && <Drawing socket={socket} setSocket={setSocket} viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes} setUsedIndexes={setUsedIndexes} artist={artist} setArtist={setArtist}/>}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
             {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }

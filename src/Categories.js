@@ -1,7 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
-function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round, setRound}) {
+
+function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost,round,setRound}) {
     const { roomId } = useParams();
     //const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
     const [categories, setCategories] = useState(["1", "2", "3"]);
@@ -9,6 +10,8 @@ function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [counter, setCounter] = useState(10);
     const [timer, setTimer] = useState("0:00");
+    const [playersInt, setPlayersInt] = useState(players.length);
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
 
     const handleNextBtn = useCallback (() => {
         setViewNext(true);
@@ -37,6 +40,22 @@ function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round
             return (minutes + ":0" + seconds);
         });
     }, [counter, setTimer]);
+
+    //this makes it so the page will only nav if all users have submitted
+    const handleClick = () => {
+        handleNextBtn(); /*
+       //decrement player
+        setPlayersInt(playersInt-1);
+        //add additional var so we can use it in real time
+        const updatedPlayersInt = playersInt-1;
+        console.log(updatedPlayersInt);
+        //disable buttons
+        setButtonDisabled(true);
+        if (updatedPlayersInt <= 0) {
+            handleNextBtn();
+        }
+    */
+    };
 
     //placeholder until votes can be sent to the backend
     useEffect(() => {
@@ -72,7 +91,7 @@ function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round
             console.log("THIS IS BEING CALLED");
             async function fetchCategories() {
                 //swap Url on deployment (back end url)
-                const response = await fetch(`http://localhost:8000/categories?seed=${seed}`);
+                const response = await fetch(`https://fictionary-backend-ylsan.ondigitalocean.app?seed=${seed}`);
                 const categories = await response.json();
     
                 setCategories(categories);
@@ -108,6 +127,15 @@ function Categories({viewCurr, setViewCurr, setViewNext, isHost, setIsHost,round
                     </p>
                 </fieldset>
             </form>
+            <div className = "flex justify-center brown-button">
+                <div>
+                    <button type="button" 
+                    onClick={handleClick} 
+                    disabled={isButtonDisabled}>
+                        Submit
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

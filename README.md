@@ -18,7 +18,7 @@ There are a few ways to try our project. You can try it online or try it yoursel
 
 ### Setup Instructions 
 
-    To get the game running locally, follow these steps:
+To get the game running locally, follow these steps:
 
 1. **Prerequisites:**
    - Ensure Node.js is installed on your system.

@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, useCallback } from 'react';
+// import { useParams } from 'react-router-dom';
 
-const Timer = () => {
-  const [seconds, setSeconds] = useState(60);
-
+const Timer = ({viewCurr, seconds, setSeconds, handleNextBtn}) => {
   useEffect(() => {
     // Update the timer every second
     const interval = setInterval(() => {
-      setSeconds(prevSeconds => (prevSeconds > 0 ? prevSeconds - 1 : 0));
+      if (viewCurr) {
+        setSeconds(prevSeconds => (prevSeconds > 0 ? prevSeconds - 1 : 0));
+      }
     }, 1000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(interval);
-  }, []); // Empty dependency array ensures the effect runs only once on mount
+  }, [viewCurr, setSeconds]); // Empty dependency array ensures the effect runs only once on mount
 
   const formatTime = (timeInSeconds) => {
     const minutes = Math.floor(timeInSeconds / 60);
     const remainingSeconds = timeInSeconds % 60;
     return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
   };
+
+  useEffect(() => {
+    if (seconds <= 0) {
+      handleNextBtn();
+    }
+  }, [seconds, viewCurr, handleNextBtn]);
 
   return (
     <div>
@@ -62,15 +68,26 @@ const Canvas = () => {
   );
 };
 
-function Voting({modalId, nextModalId}) {
-    const { roomId } = useParams();
+function Voting({viewCurr, setViewCurr, setViewNext}) {
+    // const { roomId } = useParams();
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
-     
+    const [seconds, setSeconds] = useState(60);
+    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+    // const [seconds, setSeconds] = useState(10);
+ 
+    const handleNextBtn = useCallback(() => {
+      setViewNext(true);
+      setViewCurr(false);
+      setSeconds(60);
+      /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+      // setSeconds(10);
+    }, [setViewCurr, setViewNext, setSeconds]);
+
     return (
       <div className="background custom-text">
         
           <div className= "flex justify-end">
-            <Timer />
+            <Timer viewCurr={viewCurr} seconds={seconds} setSeconds={setSeconds} handleNextBtn={handleNextBtn} />
           </div>
         
           <div className="w-full mx-auto flex flex-row items-center">
@@ -84,7 +101,7 @@ function Voting({modalId, nextModalId}) {
               </div>
               <div className="flex justify-center brown-button">
                 <div>
-                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" >
+                  <button onClick={handleNextBtn} type="button" >
                     Submit
                   </button>
                 </div>

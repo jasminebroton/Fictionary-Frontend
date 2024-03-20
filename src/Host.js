@@ -9,9 +9,9 @@ function Host() {
     {   
         const guestName = document.getElementById("name").value;
         if(guestName !== "") {
-            navigate(`/room/${roomId}`, {replace: true, state: {"host": true, "name": guestName}});
+            navigate(`/room/${roomId}`, {replace: false, state: {"host": true, "name": guestName}});
             // see issue #16
-            window.location.reload();
+            // window.location.reload();
         }
     }
 
@@ -20,12 +20,16 @@ function Host() {
     }
 
     return (
-        <div className="background custom-text">
+        <div className="background custom-text flex flex-col space-y-12">
             <div className="header mb-20">Fictionary</div>
+            
             <div className="sub-header">Enter Your Name (Host): </div>
-            <div className="text-entry-box"><input type="text" id="name" size={15}></input></div>
+            <div><input type="text" id="name" placeholder='Name' className='text-entry-box'></input></div>
+            
+            <div>
             <div className="blue-button" onClick={toLobby}>Enter</div> 
             <div className="red-button" onClick={returnHome} >Return Home</div>
+            </div>
         </div>
     )
 }

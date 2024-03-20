@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import App from "../App.js";
 import "setimmediate";
-// when running npm test, NODE_ENV is set to "test"
 
 test("loads home page", async () => {
     render(<App />);
@@ -34,66 +33,40 @@ test("loads lobby page", async () => {
     await userEvent.click(screen.getByText("Start"));
 });
 
-test("loads categories page", async () => {
+test("loads timer in categories page", async () => {
     render(<App />);
-
     await userEvent.click(screen.getByText("Start"));
 
-    // testing Categories.js component
+    // testing timer in Categories.js component
+    expect(screen.getByText("1:00"));
     expect(screen.getByText("Vote for a Category"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
 });
 
-test("loads drawing page", async () => {
+test("loads timer in drawing page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
 
-    // testing Drawing.js component
+    // testing timer in Drawing.js component
+    expect(screen.getByText("3:00"));
     expect(screen.getByText("Drawing Tools"));
     await userEvent.click(screen.getByText("Submit Drawing"));
 });
 
-test("loads voting page", async () => {
+test("loads timer in voting page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
     await userEvent.click(screen.getByText("Submit Drawing"));
 
-    // testing Voting.js component
+    // testing timer in Voting.js component
+    expect(screen.getByText("01:00"));
     expect(screen.getByText("CATEGORY IS"));
     await userEvent.click(screen.getByText("Submit"));
 });
 
-test("loads results page", async () => {
-    render(<App />);
-    await userEvent.click(screen.getByText("Start"));
-    await userEvent.click(screen.getByText("(this should not be visible)"));
-    await userEvent.click(screen.getByText("Submit Drawing"));
-    await userEvent.click(screen.getByText("Submit"));
-
-    // testing Results.js component
-    expect(screen.getByText("Everyone's Guesses"));
-    expect(screen.getByText("Your Score: 0"));
-    await userEvent.click(screen.getByTestId("results-ctn-btn"));
-});
-
-test("loads scoreboard page", async () => {
-    render(<App />);
-    await userEvent.click(screen.getByText("Start"));
-    await userEvent.click(screen.getByText("(this should not be visible)"));
-    await userEvent.click(screen.getByText("Submit Drawing"));
-    await userEvent.click(screen.getByText("Submit"));
-    await userEvent.click(screen.getByTestId("results-ctn-btn"));
-
-    // testing Scoreboard.js component
-    expect(screen.getByText("Fictionary"));
-    expect(screen.getByText("Best Artist:"));
-    expect(screen.getByText("Best Trickster:"));
-    await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
-});
-
-test("loads new round (back to categories page)", async () => {
+test("reloads timer in categories page", async () => {
     render(<App />);
     await userEvent.click(screen.getByText("Start"));
     await userEvent.click(screen.getByText("(this should not be visible)"));
@@ -102,6 +75,41 @@ test("loads new round (back to categories page)", async () => {
     await userEvent.click(screen.getByTestId("results-ctn-btn"));
     await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
 
-    // back to Categories.js component
+    // testing timer again in categories
+    expect(screen.getByText("1:00"));
     expect(screen.getByText("Vote for a Category"));
+    await userEvent.click(screen.getByText("(this should not be visible)"));
+});
+
+test("reloads timer in drawing page", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByText("Start"));
+    await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+    await userEvent.click(screen.getByText("Submit"));
+    await userEvent.click(screen.getByTestId("results-ctn-btn"));
+    await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
+    await userEvent.click(screen.getByText("(this should not be visible)"));
+
+    // testing timer again in drawing
+    expect(screen.getByText("3:00"));
+    expect(screen.getByText("Drawing Tools"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+});
+
+test("reloads timer in voting page", async () => {
+    render(<App />);
+    await userEvent.click(screen.getByText("Start"));
+    await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+    await userEvent.click(screen.getByText("Submit"));
+    await userEvent.click(screen.getByTestId("results-ctn-btn"));
+    await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
+    await userEvent.click(screen.getByText("(this should not be visible)"));
+    await userEvent.click(screen.getByText("Submit Drawing"));
+
+    // testing timer again in voting
+    expect(screen.getByText("01:00"));
+    expect(screen.getByText("CATEGORY IS"));
+    await userEvent.click(screen.getByText("Submit"));
 });

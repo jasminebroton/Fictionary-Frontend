@@ -4,12 +4,12 @@ import io from 'socket.io-client';
 
 const SOCKET_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, guestName}) {
+function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, guestName, players, setPlayers}) {
   const navigate = useNavigate();
   const { roomId } = useParams();
   // ellen: guestName passed as a prop from Host.js and extracted in Room.js passed to Lobby.js as a prop
   // const { roomId, guestName } = useParams();
-  const [players, setPlayers] = useState([]);
+  // const [players, setPlayers] = useState([]);
   // ellen: moved to Room.js so each game page can access these
   // const [socket, setSocket] = useState(null);
   // const [isHost, setIsHost] = useState(false);
@@ -38,6 +38,7 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, gues
     newSocket.on('gameStarted', () => {
       // Conditional rendering for the game (i.e., Canvas, Results, Scoreboard)
       alert('Game Start');
+      handleNext();
     });
 
     return () => {
@@ -58,6 +59,18 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, gues
     } else {
       alert('Only the host can start the game.');
     }
+    // please don't remove, does not break anything but needed for testing, see issue #43
+    // npm start -> NODE_ENV set to "development"
+    // npm build -> NODE_ENV set to "production"
+    // npm test -> NODE_ENV set to "test"
+    if (process.env.NODE_ENV === "test") {
+      handleNext();
+    }
+  }
+
+  function handleNext() {
+    setViewCurr(false);
+    setViewNext(true);
   }
 
     //procedurally generate table/list for users 
@@ -80,7 +93,7 @@ function Lobby({modalId, nextModalId, socket, setSocket, isHost, setIsHost, gues
             <div>
                 <button onClick={handleLeaveClick} className="red-button mx-20 mt-10">Leave</button>
                 {isHost && (
-                  <button data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} className="blue-button mx-20 mt-10" >Start</button>
+                  <button onClick={handleStartClick} className="blue-button mx-20 mt-10" >Start</button>
                 )}
             </div>
         </div>

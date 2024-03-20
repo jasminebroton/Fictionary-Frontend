@@ -1,19 +1,32 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 
-function Categories({modalId, nextModalId}) {
-    const navigate = useNavigate();
+function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost}) {
     const { roomId } = useParams();
     const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
-    const [counter, setCounter] = useState(60)
-    const [timer, setTimer] = useState("0:00")
+    const [counter, setCounter] = useState(60);
+    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+    // const [counter, setCounter] = useState(10);
+    const [timer, setTimer] = useState("0:00");
+    const [playersInt, setPlayersInt] = useState(players.length);
+    const [isButtonDisabled, setButtonDisabled] = useState(false);
+
+    const handleNextBtn = useCallback (() => {
+        setViewNext(true);
+        setViewCurr(false);
+        setCounter(60);
+        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+        // setCounter(10);
+    }, [setViewCurr, setViewNext, setCounter]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            setCounter(counter => counter - 1)
+            if (viewCurr) {
+                setCounter(counter => counter - 1)
+            }
         }, 1000);
         return () => clearInterval(intervalId);
-    }, []);
+    }, [viewCurr, setCounter]);
 
     useEffect(() => {
         setTimer(() => {
@@ -24,18 +37,35 @@ function Categories({modalId, nextModalId}) {
             }
             return (minutes + ":0" + seconds);
         });
-    });
+    }, [counter, setTimer]);
+
+    //this makes it so the page will only nav if all users have submitted
+    const handleClick = () => {
+        handleNextBtn(); /*
+       //decrement player
+        setPlayersInt(playersInt-1);
+        //add additional var so we can use it in real time
+        const updatedPlayersInt = playersInt-1;
+        console.log(updatedPlayersInt);
+        //disable buttons
+        setButtonDisabled(true);
+        if (updatedPlayersInt <= 0) {
+            handleNextBtn();
+        }
+    */
+    };
 
     //placeholder until votes can be sent to the backend
-    if(counter <= 0){
-        // navigate(`/drawing/${roomId}`);
-        document.getElementById("categories-ctn-btn").click();
-    }
+    useEffect(() => {
+        if (counter <= 0) {
+            handleNextBtn();
+        }
+    }, [counter, viewCurr, handleNextBtn]);
+
 
     return (
         <div className="background custom-text">
-            <button type="button" onClick={() => document.getElementById("categories-ctn-btn").click()} className="" >&#40;this should not be visible&#41;</button>
-            <button id="categories-ctn-btn" data-modal-target={nextModalId} data-modal-show={nextModalId} data-modal-hide={modalId} type="button" className="hidden"></button>
+            <button type="button" onClick={handleNextBtn} className="" >&#40;this should not be visible&#41;</button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
                 <p className="header col-start-2 col-span-3">Fictionary</p>
                 <p className="timer">{timer}</p>
@@ -58,6 +88,15 @@ function Categories({modalId, nextModalId}) {
                     </p>
                 </fieldset>
             </form>
+            <div className = "flex justify-center brown-button">
+                <div>
+                    <button type="button" 
+                    onClick={handleClick} 
+                    disabled={isButtonDisabled}>
+                        Submit
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

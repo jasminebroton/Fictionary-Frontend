@@ -8,12 +8,21 @@ import Drawing from "./Drawing.js";
 import Voting from "./Voting.js";
 import Results from "./Results.js";
 import Scoreboard from './Scoreboard';
+import FinalScore from './FinalScore.js';
+import Artist from './Artist.js';
 
 function Room() {
     const location = useLocation();
     const [isHost, setIsHost] = useState(location.state?.host ? true : false);
     const [guestName] = useState(location.state?.name);
     const [socket, setSocket] = useState(null);
+    const [players, setPlayers] = useState([]);
+    const [guesses, setGuesses] = useState([]);
+    const [viewFinal, setViewFinalScore] = useState(false);
+    const [roundCount, setRoundCount] = useState(0);
+    const [usedIndexes, setUsedIndexes] = useState([]);
+    const [artist, setArtist] = useState(null);
+    const [viewArtist, setViewArtist] = useState(false)
 
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
@@ -32,6 +41,7 @@ function Room() {
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }
             {viewResults && <Results setViewCurr={setViewResults} setViewNext={setViewScoreboard} /> }
             {viewScoreboard && <Scoreboard setViewCurr={setViewScoreboard} setViewNext={setViewCategories} /> }
+            {viewFinal && <FinalScore viewCurr={viewFinal} setViewCurr={setViewFinalScore} setViewNext={setViewLobby} />}
         </div>
     );  
 }

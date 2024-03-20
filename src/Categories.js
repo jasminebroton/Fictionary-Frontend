@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
-function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost}) {
+
+function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost,round,setRound}) {
     const { roomId } = useParams();
-    const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
+    //const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
+    const [categories, setCategories] = useState(["1", "2", "3"]);
     const [counter, setCounter] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [counter, setCounter] = useState(10);
@@ -63,6 +65,43 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, is
     }, [counter, viewCurr, handleNextBtn]);
 
 
+    
+
+    //Category retrieval 
+    useEffect(() => {
+        //For testing only
+        if(process.env.NODE_ENV ==="test"){
+            setCategories(["food","clothing","animals"]);
+        }
+
+        setRound(round+1);
+        //converts roomID to a number, add round
+        function seedGeneration() {
+            
+            let num = "";
+            for (let i = 0; i < roomId.length; i++) {
+              num += roomId.charCodeAt(i);
+            }
+            let number = parseInt(num);
+            return number+round;
+        }
+        let seed = seedGeneration();
+        //request function IF HOST
+        //if(isHost){
+            console.log("THIS IS BEING CALLED");
+            async function fetchCategories() {
+                //swap Url on deployment (back end url)
+                const response = await fetch(`https://fictionary-backend-ylsan.ondigitalocean.app?seed=${seed}`);
+                const categories = await response.json();
+    
+                setCategories(categories);
+                console.log(categories);
+            }
+            fetchCategories().catch(console.dir);
+        //}
+
+    },[isHost,roomId]);
+
     return (
         <div className="background custom-text">
             <button type="button" onClick={handleNextBtn} className="" >&#40;this should not be visible&#41;</button>
@@ -75,16 +114,16 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, is
                 <fieldset className="grid grid-cols-3 grid-rows-2 gap-x-3">
                     <legend className="header text-[#ece6c2] col-span-3">Vote for a Category</legend>
                     <p className="grid col-start-1 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_1">{categories[0].category}</label>
-                        <input type="radio" name="category" id="category_1" value={categories[0].category} />
+                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_1">{categories[0]}</label>
+                        <input type="radio" name="category" id="category_1" value={categories[0]} />
                     </p>
                     <p className="grid col-start-2 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_2">{categories[1].category}</label>
-                        <input type="radio" name="category" id="category_2" value={categories[1].category} />
+                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_2">{categories[1]}</label>
+                        <input type="radio" name="category" id="category_2" value={categories[1]} />
                     </p>
                     <p className="grid col-start-3 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_3">{categories[2].category}</label>
-                        <input type="radio" name="category" id="category_3" value={categories[2].category} />
+                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_3">{categories[2]}</label>
+                        <input type="radio" name="category" id="category_3" value={categories[2]} />
                     </p>
                 </fieldset>
             </form>

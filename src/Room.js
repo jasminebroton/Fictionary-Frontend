@@ -22,7 +22,11 @@ function Room() {
     const [roundCount, setRoundCount] = useState(0);
     const [usedIndexes, setUsedIndexes] = useState([]);
     const [artist, setArtist] = useState(null);
-    const [viewArtist, setViewArtist] = useState(false)
+    const [viewArtist, setViewArtist] = useState(false);
+
+    //round counter
+    const [round, setRound] = useState(0);
+
     // modals powered by friendship and GOD
     const [viewLobby, setViewLobby] = useState(true);
     const [viewCategories, setViewCategories] = useState(false);
@@ -33,8 +37,9 @@ function Room() {
 
     return (
         <div>
+
             {viewLobby && <Lobby players={players} setPlayers={setPlayers} socket={socket} setSocket={setSocket} isHost={isHost} setIsHost={setIsHost} guestName={guestName} setViewCurr={setViewLobby} setViewNext={setViewCategories} />}
-            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewArtist} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost}/>}
+            {viewCategories && <Categories viewCurr={viewCategories} setViewCurr={setViewCategories} setViewNext={setViewArtist} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} round={round} setRound={setRound}/>}
             {viewArtist && <Artist viewCurr={viewArtist} setViewCurr={setViewArtist} setViewNext={setViewDrawing} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes}setUsedIndexes= {setUsedIndexes} artist={artist} setArtist={setArtist}/>}
             {viewDrawing && <Drawing viewCurr={viewDrawing} setViewCurr={setViewDrawing} setViewNext={setViewVoting} players={players} setPlayers={setPlayers} isHost={isHost} setIsHost={setIsHost} usedIndexes={usedIndexes} setUsedIndexes={setUsedIndexes} artist={artist} setArtist={setArtist} socket={socket} setSocket={setSocket}/>}
             {viewVoting && <Voting viewCurr={viewVoting} setViewCurr={setViewVoting} setViewNext={setViewResults} /> }

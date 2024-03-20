@@ -10,7 +10,7 @@ var globalPaintColor;
 
 function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist, setArtist, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes}){
     const { roomId } = useParams();
-    const [artist, setArtist] = useState("user_3");
+   //const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({category: "Animals"});
     const [view, setView] = useState(isHost)
@@ -169,7 +169,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
 
                 <div className="col-start-2 col-span-2 row-span-3">
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas/></div>
-                    <p>User {artist} is drawing</p>
+                    <p>User {artist.name} is drawing</p>
                 </div>
                 
                 <div className = "col-start-4 row-span-2">

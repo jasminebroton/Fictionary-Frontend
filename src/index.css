@@ -33,7 +33,9 @@ code {
   }
 
   .text-entry-box{
-    @apply text-3xl mx-auto;
+    @apply text-4xl mx-auto;
+    @apply w-1/6;
+    @apply p-4;
   }
 
   .table{
@@ -50,10 +52,10 @@ code {
   }
 
   .header{
-    @apply text-[#6f5643] text-5xl mx-auto;
+    @apply text-[#6f5643] text-7xl mx-auto;
   }
   .sub-header{
-    @apply text-[#6f5643] text-3xl mx-auto;
+    @apply text-[#6f5643] text-5xl mx-auto;
   }
   .large-text{
     @apply text-[#6f5643] text-2xl mx-auto;
@@ -63,16 +65,16 @@ code {
   }
 
   .red-button{
-    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-1/6 p-2 my-2 mx-auto;
+    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-1/5 p-2 my-2 mx-auto text-4xl rounded-lg;
   }
   .yellow-button{
-    @apply bg-[#d2a24c] text-[#6f5643] hover:bg-[#a77b2a] w-1/6 p-2 my-2 mx-auto;
+    @apply bg-[#d2a24c] text-[#ece6c2] hover:bg-[#a77b2a] w-1/5 p-2 my-2 mx-auto text-4xl rounded-lg;
   }
   .brown-button{
-    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-1/6 p-2 my-2 mx-auto self-center;
+    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-1/5 p-2 my-2 mx-auto self-center text-4xl rounded-lg;
   }
   .blue-button{
-    @apply bg-[#73bda8] text-[#6f5643] hover:bg-[#499b83] w-1/6 p-2 my-2 mx-auto self-center;
+    @apply bg-[#73bda8] text-[#ece6c2] hover:bg-[#499b83] w-1/5 p-2 my-2 mx-auto self-center text-4xl rounded-lg;
   }
 
   .rule-text {

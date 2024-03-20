@@ -21,7 +21,7 @@ function Home() {
     }
     
     return (
-        <div className="background custom-text">
+        <div className="background custom-text flex flex-col space-y-12">
             <div className="header mb-32">Fictionary</div>
             <div className="red-button" onClick={sendToHost} >Create a Room</div>
             <div className="yellow-button" onClick={sendToGuest} >Join a Game</div>

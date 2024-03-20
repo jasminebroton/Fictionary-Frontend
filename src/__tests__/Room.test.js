@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import App from "../App.js";
 import "setimmediate";
+// when running npm test, NODE_ENV is set to "test"
 
 test("loads home page", async () => {
     render(<App />);
@@ -35,6 +36,7 @@ test("loads lobby page", async () => {
 
 test("loads categories page", async () => {
     render(<App />);
+
     await userEvent.click(screen.getByText("Start"));
 
     // testing Categories.js component
@@ -72,6 +74,7 @@ test("loads results page", async () => {
 
     // testing Results.js component
     expect(screen.getByText("Everyone's Guesses"));
+    expect(screen.getByText("Your Score: 0"));
     await userEvent.click(screen.getByTestId("results-ctn-btn"));
 });
 
@@ -84,8 +87,9 @@ test("loads scoreboard page", async () => {
     await userEvent.click(screen.getByTestId("results-ctn-btn"));
 
     // testing Scoreboard.js component
-    expect(screen.getByText("Scores:"));
-    expect(screen.getByText("Next Artist:"));
+    expect(screen.getByText("Fictionary"));
+    expect(screen.getByText("Best Artist:"));
+    expect(screen.getByText("Best Trickster:"));
     await userEvent.click(screen.getByTestId("scoreboard-ctn-btn"));
 });
 

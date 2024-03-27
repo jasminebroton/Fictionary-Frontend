@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
 
+const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
 function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost,round,setRound}) {
     const { roomId } = useParams();
@@ -77,7 +78,6 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, is
         setRound(round+1);
         //converts roomID to a number, add round
         function seedGeneration() {
-            
             let num = "";
             for (let i = 0; i < roomId.length; i++) {
               num += roomId.charCodeAt(i);
@@ -88,16 +88,16 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, is
         let seed = seedGeneration();
         //request function IF HOST
         //if(isHost){
-            console.log("THIS IS BEING CALLED");
-            async function fetchCategories() {
-                //swap Url on deployment (back end url)
-                const response = await fetch(`https://fictionary-backend-ylsan.ondigitalocean.app?seed=${seed}`);
-                const categories = await response.json();
-    
-                setCategories(categories);
-                console.log(categories);
-            }
-            fetchCategories().catch(console.dir);
+        async function fetchCategories() {
+            //swap Url on deployment (back end url)
+            const response = await fetch(`${EXPRESS_SERVER_URL}categories?seed=${seed}`);
+            console.log(response);
+            const categories = await response.json();
+            console.log(categories);
+            setCategories(categories);
+        }
+        fetchCategories().catch(console.dir);
+        // console.log("THIS IS BEING CALLED");
         //}
 
     },[isHost,roomId]);

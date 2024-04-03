@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Art_Drawing from './Pictures/Artist-Drawing.png';
+import Cat_Select from './Pictures/Category_Select.png';
+import Trick_Guess from './Pictures/Tricksters-Guess.png';    
 
 function Rules(){
     const navigate = useNavigate();
@@ -9,6 +12,7 @@ function Rules(){
     const Rules4 = 'Scoring: \n Once all trickers voted for the answer they beleive is the true answer, points are awards for the following criteria: \n Guessing the correct answer gives you 10 pts. \n Guessing a fake answer gives the person that made that answer 15 pts. \n The artist that gets 10 pts if the correct answer is chosen. \n';
     const Rules5 = "Ending: \n Once all points are given, the artist role goes to another player that hasn't went yet and the cycle goes again. \n Once all player have went once, another category is to be voted for and restarts. \n When three categories and all players have went their respective times, \n the game ends and the winner is choosen with the person with the most points.";
     const RuleArray = [Rules1, Rules2, Rules3, Rules4, Rules5];
+    const ArtArray = [Art_Drawing, Cat_Select, Trick_Guess];
     const [activeRule, setActiveRule,] = useState(0);
     const [isVisible, setIsVisible] = useState(true);
 
@@ -55,8 +59,15 @@ function Rules(){
     return (
         <div className="background custom-text">
             <div className="header">Fictionary</div>
-            <div className="large-text mb-28">How to Play</div>
-            <div className="container mx-auto mb-16 box-border h-32 w-auto">
+            <div className="large-text mb-12">How to Play</div>
+            <div className="flex justify-center">
+            {isVisible ?  (
+                <img className="border-4 border-black transition-opacity duration-500 opacity-100" src={ArtArray[activeRule]} alt="ArtArray"/>
+            ):(
+                <img className="border-4 border-black transition-opacity duration-500 opacity-0" src={ArtArray[activeRule]} alt="ArtArray"/>
+                )}
+            </div>
+            <div className="container mx-auto mb-10 box-border h-32 w-auto">
                 {isVisible ?  (
                     <h1 className="transition-opacity duration-500 opacity-100 rule-text display-linebreak">{RuleArray[activeRule]}</h1>
                  ) : (

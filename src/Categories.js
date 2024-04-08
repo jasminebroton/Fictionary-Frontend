@@ -1,31 +1,36 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useCallback } from "react";
+import { useSocket } from './context/SocketContext';
 
 const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost,round,setRound}) {
+function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost, round, setRound }) {
     const { roomId } = useParams();
-    //const [categories, setCategories] = useState([{category: "Animals"}, {category: "Objects"}, {category: "Buildings"}]);
     const [categories, setCategories] = useState(["1", "2", "3"]);
     const [counter, setCounter] = useState(60);
-    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
-    // const [counter, setCounter] = useState(10);
     const [timer, setTimer] = useState("0:00");
-    const [playersInt, setPlayersInt] = useState(players.length);
     const [isButtonDisabled, setButtonDisabled] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const { socket } = useSocket(); // Assume socket context is provided
 
-    const handleNextBtn = useCallback (() => {
+    const handleSubmit = useCallback((e) => {
+        e.preventDefault();
+        if (selectedCategory) {
+            socket.emit('voteCategory', { roomId, category: selectedCategory });
+        }
+    }, [socket, roomId, selectedCategory]);
+
+    const handleNextBtn = useCallback(() => {
         setViewNext(true);
         setViewCurr(false);
         setCounter(60);
-        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
-        // setCounter(10);
-    }, [setViewCurr, setViewNext, setCounter]);
+        socket.emit('endVoting', roomId); // Inform the server when navigating away
+    }, [setViewCurr, setViewNext, setCounter, socket, roomId]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             if (viewCurr) {
-                setCounter(counter => counter - 1)
+                setCounter(counter => counter - 1);
             }
         }, 1000);
         return () => clearInterval(intervalId);
@@ -35,107 +40,81 @@ function Categories({viewCurr, setViewCurr, setViewNext, players, setPlayers, is
         setTimer(() => {
             var minutes = Math.floor(counter / 60);
             var seconds = counter % 60;
-            if(seconds > 9){
-                return (minutes + ":" + seconds);
-            }
-            return (minutes + ":0" + seconds);
+            return seconds > 9 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
         });
-    }, [counter, setTimer]);
+    }, [counter]);
 
-    //this makes it so the page will only nav if all users have submitted
-    const handleClick = () => {
-        handleNextBtn(); /*
-       //decrement player
-        setPlayersInt(playersInt-1);
-        //add additional var so we can use it in real time
-        const updatedPlayersInt = playersInt-1;
-        console.log(updatedPlayersInt);
-        //disable buttons
-        setButtonDisabled(true);
-        if (updatedPlayersInt <= 0) {
-            handleNextBtn();
-        }
-    */
-    };
-
-    //placeholder until votes can be sent to the backend
+    // Automatically navigate to the next view when the timer reaches zero
     useEffect(() => {
         if (counter <= 0) {
             handleNextBtn();
         }
-    }, [counter, viewCurr, handleNextBtn]);
+    }, [counter, handleNextBtn]);
 
-
-    
-
-    //Category retrieval 
+    // Handling real-time category selection
     useEffect(() => {
-        //For testing only
-        if(process.env.NODE_ENV ==="test"){
-            setCategories(["food","clothing","animals"]);
-        }
+        socket.on('categorySelected', (selectedCategory) => {
+            setViewNext(true);
+            setViewCurr(false);
+        });
 
-        setRound(round+1);
-        //converts roomID to a number, add round
-        function seedGeneration() {
-            let num = "";
-            for (let i = 0; i < roomId.length; i++) {
-              num += roomId.charCodeAt(i);
+        return () => {
+            socket.off('categorySelected');
+        };
+    }, [socket, setViewNext, setViewCurr]);
+
+    // Category retrieval and setting up seed based on room ID and round
+    useEffect(() => {
+        if (process.env.NODE_ENV === "test") {
+            setCategories(["food", "clothing", "animals"]);
+        } else {
+            setRound(round + 1);
+            const seed = Array.from(roomId).reduce((acc, char) => acc + char.charCodeAt(0), 0) + round;
+            async function fetchCategories() {
+                const response = await fetch(`${EXPRESS_SERVER_URL}categories?seed=${seed}`);
+                const categories = await response.json();
+                setCategories(categories);
             }
-            let number = parseInt(num);
-            return number+round;
+            fetchCategories().catch(console.error);
         }
-        let seed = seedGeneration();
-        //request function IF HOST
-        //if(isHost){
-        async function fetchCategories() {
-            //swap Url on deployment (back end url)
-            const response = await fetch(`${EXPRESS_SERVER_URL}categories?seed=${seed}`);
-            console.log(response);
-            const categories = await response.json();
-            console.log(categories);
-            setCategories(categories);
-        }
-        fetchCategories().catch(console.dir);
-        // console.log("THIS IS BEING CALLED");
-        //}
-
-    },[isHost,roomId]);
+    }, [isHost, roomId, round, setRound]);
 
     return (
         <div className="background custom-text">
-            <button type="button" onClick={handleNextBtn} className="" >&#40;this should not be visible&#41;</button>
             <div className="grid grid-cols-5 grid-rows-2 justify-center">
                 <p className="header col-start-2 col-span-3">Fictionary</p>
                 <p className="timer">{timer}</p>
                 <p className="text-1xl col-start-2 col-span-3 row-start-2">Room: {roomId}</p>
             </div>
-            <form className="bg-[#6f5643] p-4">
+            <form className="bg-[#6f5643] p-4" onSubmit={handleSubmit}>
                 <fieldset className="grid grid-cols-3 grid-rows-2 gap-x-3">
                     <legend className="header text-[#ece6c2] col-span-3">Vote for a Category</legend>
-                    <p className="grid col-start-1 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_1">{categories[0]}</label>
-                        <input type="radio" name="category" id="category_1" value={categories[0]} />
-                    </p>
-                    <p className="grid col-start-2 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_2">{categories[1]}</label>
-                        <input type="radio" name="category" id="category_2" value={categories[1]} />
-                    </p>
-                    <p className="grid col-start-3 row-start-2">
-                        <label className="bg-[#73bda8] p-4 mx-auto text-3xl" for="category_3">{categories[2]}</label>
-                        <input type="radio" name="category" id="category_3" value={categories[2]} />
-                    </p>
+                    {categories.map((category, index) => (
+                        <div className="grid" key={index}>
+                            <label className="bg-[#73bda8] p-4 mx-auto text-3xl" htmlFor={`category_${index}`}>
+                                {category}
+                            </label>
+                            <input
+                                type="radio"
+                                name="category"
+                                id={`category_${index}`}
+                                value={category}
+                                onChange={() => setSelectedCategory(category)}
+                            />
+                        </div>
+                    ))}
                 </fieldset>
-            </form>
-            <div className = "flex justify-center brown-button">
-                <div>
-                    <button type="button" 
-                    onClick={handleClick} 
-                    disabled={isButtonDisabled}>
-                        Submit
-                    </button>
+                <div className="flex justify-center brown-button">
+                    <div>
+                        <button
+                            type="submit"
+                            disabled={isButtonDisabled || !selectedCategory}
+                        >
+                            Submit
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

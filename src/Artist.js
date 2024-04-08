@@ -1,89 +1,68 @@
-import React from 'react';
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useSocket } from './context/SocketContext';
 
-
-function Artist({viewCurr, setViewCurr, setViewNext, players, setPlayers, isHost, setIsHost, usedIndexes, setUsedIndexes, artist, setArtist}) {
+function Artist({ viewCurr, setViewCurr, setViewNext }) {
     const [count, setCount] = useState(null);
-    const playersCopy = [...players];
+    const [artist, setArtist] = useState(null);
+    const { socket } = useSocket();
 
     const handleNext = useCallback(() => {
-      setViewNext(true);
-      setViewCurr(false);
-  }, [setViewCurr, setViewNext]);
-
-    const getRandomIndex = (maxIndex) => {
-        let ranNum;
-        do {
-        ranNum = Math.floor(Math.random() * maxIndex) + 1;
-        } while (usedIndexes.includes(ranNum));
-
-        setUsedIndexes(usedIndexes => [...usedIndexes, ranNum]);
-        return ranNum;
-      };
-
-    const artistPicker = () => {
-        let randomNum = getRandomIndex(playersCopy.length);
-        let newArtist = playersCopy[randomNum-1]; 
-        let previousHost = playersCopy.find((player) => player.isHost);
-        setArtist(newArtist);
-        if (newArtist) {
-          newArtist.isHost = true;
-          setIsHost(newArtist ? newArtist.isHost : false);
-        }
-        
-        //take away previous host rights
-        if (previousHost) {
-          previousHost.isHost = false;
-          setIsHost(previousHost.isHost);
-        }
-        //update players array to be accurate
-        setPlayers([...playersCopy]);
-    };
+        setViewNext(true);
+        setViewCurr(false);
+    }, [setViewCurr, setViewNext]);
 
     useEffect(() => {
-        artistPicker();
-      }, []);
+        if (socket) {
+            socket.on('updateHost', (hostData) => {
+                setArtist(hostData);
+            });
+
+            return () => {
+                socket.off('updateHost');
+            };
+        }
+    }, [socket]);
 
     useEffect(() => {
-      const delay = setTimeout(() => {
-        setCount(3);
-      }, 2000);
-      return () => clearTimeout(delay);
+        const delay = setTimeout(() => {
+            setCount(3);
+        }, 2000);
+        return () => clearTimeout(delay);
     }, []);
 
     useEffect(() => {
-      if (count === null) return;
-      const countdown = setTimeout(() => {
-        if (count > 1) {
-          setCount(count - 1);
-        } else {
-          handleNext();
-        }
-      }, 1000);
-      return() => clearTimeout(countdown);
-    }, [count]);
+        if (count === null) return;
 
-    return(
-        <div className="background custom-text flex flex-col space-y-44 text-center py-12 text-6xl ">
-           <button id="nextButton" data-testid= "next" onClick={handleNext} style={{ display: 'none' }}>next</button>
-          <div>
-            <div> NEXT ARTIST IS <br /> <br /> </div>
-               <div className="animate-bounce">{artist && artist.name} </div>
-            </div>
-               {count !== null && (
-                <>
+        const countdown = setTimeout(() => {
+            if (count > 1) {
+                setCount(count - 1);
+            } else {
+                handleNext();
+            }
+        }, 1000);
+
+        return () => clearTimeout(countdown);
+    }, [count, handleNext]);
+
+    return (
+        <div className="background custom-text flex flex-col space-y-44 text-center py-12 text-6xl">
+            <button id="nextButton" data-testid="next" onClick={handleNext} style={{ display: 'none' }}>
+                next
+            </button>
+            <div>
                 <div>
-                  GET READY TO DRAW IN
-                  <div>
-                  {count}
-                  </div>
+                    THE ARTIST IS <br /> <br />
                 </div>
-                </>
-               )}
-
+                <div className="animate-bounce">{artist ? artist.name : 'Loading...'}</div>
+            </div>
+            {count !== null && (
+                <div>
+                    GET READY TO DRAW IN
+                    <div>{count}</div>
+                </div>
+            )}
         </div>
     );
-
 }
 
 export default Artist;

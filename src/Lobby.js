@@ -26,6 +26,9 @@ function Lobby({setViewCurr, setViewNext, socket, setSocket, isHost, setIsHost, 
     });
 
 
+
+
+    // adding this comment so I can commit
     // Setup event listeners for socket
     newSocket.on('updateUserList', (Updatedplayers) => {
       setPlayers(Updatedplayers);

@@ -9,8 +9,7 @@ function Guest() {
     console.log(EXPRESS_SERVER_URL);
     const navigate = useNavigate();
     const [error, setError] = useState('');
-    
-
+   
     async function toLobby()
     {
         const guestName = document.getElementById("name").value;
@@ -24,6 +23,7 @@ function Guest() {
                 navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});
                 } else {
                     setError(data.error);
+                    alert('Room Id Invalid');
                 }
             } catch (error) {
                 console.error('Error validating room ID:', error);

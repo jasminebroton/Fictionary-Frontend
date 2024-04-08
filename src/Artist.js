@@ -12,16 +12,28 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
     }, [setViewCurr, setViewNext]);
 
     useEffect(() => {
+        socket.emit('requestUserList'); // Assuming room ID is not needed or is handled globally
+        console.log('Requesting user list');
+    
+        const updateUserList = (users) => {
+            console.log('Received user list:', users);
+            const host = users.find(user => user.isHost);
+            if (host) {
+                console.log('Setting artist as:', host.name);
+                setArtist(host.name); // Assuming 'host.name' contains the host's name
+            }
+        };
+    
         if (socket) {
-            socket.on('updateHost', (hostData) => {
-                setArtist(hostData);
-            });
-
+            socket.on('updateUserList', updateUserList);
+    
             return () => {
-                socket.off('updateHost');
+                console.log('Cleaning up');
+                socket.off('updateUserList', updateUserList);
             };
         }
     }, [socket]);
+    
 
     useEffect(() => {
         const delay = setTimeout(() => {
@@ -53,7 +65,7 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
                 <div>
                     THE ARTIST IS <br /> <br />
                 </div>
-                <div className="animate-bounce">{artist ? artist.name : 'Loading...'}</div>
+                <div className="animate-bounce">{artist || 'Loading...'}</div>
             </div>
             {count !== null && (
                 <div>

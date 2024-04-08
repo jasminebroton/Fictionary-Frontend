@@ -34,7 +34,7 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
             }
         }, 1000);
         return () => clearInterval(intervalId);
-    }, [viewCurr, setCounter]);
+    }, [viewCurr]);
 
     useEffect(() => {
         setTimer(() => {
@@ -65,19 +65,28 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
 
     // Category retrieval and setting up seed based on room ID and round
     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const seed = Array.from(roomId).reduce((acc, char) => acc + char.charCodeAt(0), 0) + round;
+                const response = await fetch(`${EXPRESS_SERVER_URL}categories?seed=${seed}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch categories');
+                }
+                const categories = await response.json();
+                setCategories(categories);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+                // Handle the error case, e.g., display an error message to the user
+            }
+        };
+
         if (process.env.NODE_ENV === "test") {
             setCategories(["food", "clothing", "animals"]);
         } else {
-            setRound(round + 1);
-            const seed = Array.from(roomId).reduce((acc, char) => acc + char.charCodeAt(0), 0) + round;
-            async function fetchCategories() {
-                const response = await fetch(`${EXPRESS_SERVER_URL}categories?seed=${seed}`);
-                const categories = await response.json();
-                setCategories(categories);
-            }
-            fetchCategories().catch(console.error);
+            fetchCategories();
         }
-    }, [isHost, roomId, round, setRound]);
+
+    }, [roomId, round]); // Removed isHost, setRound from the dependencies to avoid infinite loop
 
     return (
         <div className="background custom-text">

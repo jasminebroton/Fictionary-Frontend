@@ -24,6 +24,7 @@ function Guest() {
                 navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});
                 } else {
                     setError(data.error);
+                    alert('Invalid Room ID');
                 }
             } catch (error) {
                 console.error('Error validating room ID:', error);

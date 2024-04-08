@@ -8,11 +8,14 @@ var theSocket;
 var globalBrushSize;
 var globalPaintColor;
 
-function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist, setArtist, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes}){
+const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
+
+function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist, setArtist, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
     const { roomId } = useParams();
    //const [artist, setArtist] = useState("user_3");
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({category: "Animals"});
+    const [word, setWord] = useState();
     const [view, setView] = useState(isHost)
     theView = view;
     theSocket = socket;
@@ -52,6 +55,49 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
             return !view;
         });
     }
+
+    //Word retrieval 
+    useEffect(() => {
+
+        setRound(round+1);
+        //converts roomID to a number, add round
+        function seedGeneration() {
+            let num = "";
+            for (let i = 0; i < roomId.length; i++) {
+              num += roomId.charCodeAt(i);
+            }
+            let number = parseInt(num);
+            return number+round;
+        }
+        let seed = seedGeneration();
+        let theCategory;
+
+        //request category !! -can't test
+        socket.emit('requestCurretnCategory',roomId);
+
+        socket.on('currentCategory', function(category) {
+            
+            console.log('Current category:', category);
+            setCategory(category);
+            theCategory = category;
+        });
+
+        
+
+        async function fetchCategories() {
+            //swap Url on deployment (back end url)
+            const response = await fetch(`${EXPRESS_SERVER_URL}words?seed=${seed}&category=${theCategory}`);
+            console.log(response);
+            const word = await response.json();
+            console.log(word);
+            setWord(word);
+        }
+        fetchCategories().catch(console.dir);
+        // console.log("THIS IS BEING CALLED");
+        //}
+
+    },[isHost,roomId]);
+
 
     //placeholder until the drawing can actually be sent to the backend
     const submitDrawing = useCallback(() => {
@@ -100,7 +146,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
                     <div className="col-start-2 col-span-2">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
-                        <p className="header">CATEGORY IS:</p>
+                        <p className="header">CATEGORY IS:{word}</p>{/*Change to word -> return word */}
                         <p className="large-text">{category.category}</p>
                     </div>
                     <p className="timer">{timer}</p>

@@ -14,10 +14,10 @@ function Guest() {
     {
         const guestName = document.getElementById("name").value;
         const roomId = document.getElementById("id").value;
-        
+      
         if(roomId.length === 4 && guestName !== "") {
             try {
-                const response = await fetch(`${EXPRESS_SERVER_URL}/validateRoom/${roomId}`);
+                const response = await fetch(`${EXPRESS_SERVER_URL}validateRoom/${roomId}`);
                 const data = await response.json();
                 if (response.ok) {
                 navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});

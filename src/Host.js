@@ -21,10 +21,10 @@ function Host() {
     function returnHome(){
         navigate('/');
     }
-    
-    const sendRoomId = async (roomId) => {
+   
+   const sendRoomId = async (roomId) => {
         try {
-          const response = await fetch(`${EXPRESS_SERVER_URL}/addRoomId`, {
+          const response = await fetch(`${EXPRESS_SERVER_URL}addRoomId`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

@@ -70,19 +70,17 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
             return number+round;
         }
         let seed = seedGeneration();
-        let theCategory;
+        let theCategory = "animals";
 
         //request category !! -can't test
-        socket.emit('requestCurretnCategory',roomId);
+        // socket.emit('requestCurretnCategory',roomId);
 
-        socket.on('currentCategory', function(category) {
+        // socket.on('currentCategory', function(category) {
             
-            console.log('Current category:', category);
-            setCategory(category);
-            theCategory = category;
-        });
-
-        
+        //     console.log('Current category:', category);
+        //     setCategory(category);
+        //     theCategory = category;
+        // });
 
         async function fetchCategories() {
             //swap Url on deployment (back end url)
@@ -146,7 +144,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
                     <div className="col-start-2 col-span-2">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
-                        <p className="header">CATEGORY IS:{word}</p>{/*Change to word -> return word */}
+                        <p className="header">WORD IS:{word}</p>{/*Change to word -> return word */}
                         <p className="large-text">{category.category}</p>
                     </div>
                     <p className="timer">{timer}</p>

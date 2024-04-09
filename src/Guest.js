@@ -1,28 +1,44 @@
 import './output.css';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 
+const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
 function Guest() {
     // const { roomId } = useParams();
+    console.log(EXPRESS_SERVER_URL);
     const navigate = useNavigate();
-    
-
-    
-
-    function toLobby()
+    const [error, setError] = useState('');
+   
+    async function toLobby()
     {
         const guestName = document.getElementById("name").value;
         const roomId = document.getElementById("id").value;
-        
-        if(roomId.length === 4 && guestName !== "")
-            navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});
-            // see issue #16
-            // window.location.reload();
+      
+        if(roomId.length === 4 && guestName !== "") {
+            try {
+                const response = await fetch(`${EXPRESS_SERVER_URL}validateRoom/${roomId}`);
+                const data = await response.json();
+                if (response.ok) {
+                navigate(`/room/${roomId}`, {replace: false, state: {"name": guestName}});
+                } else {
+                    setError(data.error);
+
+                    alert('Invalid Room ID');
+
+                }
+            } catch (error) {
+                console.error('Error validating room ID:', error);
+                setError('Error validating room ID. Please try again.');
+            }
+        }
     }
     function returnHome(){
         navigate('/');
     }
+    function validateRoomId() {
 
+    }
     return (
         <div className="background custom-text flex flex-col space-y-12">
             <div>

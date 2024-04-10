@@ -2,10 +2,36 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSocket } from './context/SocketContext';
 
+
 function Results({setViewCurr, setViewNext, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
+
     const { roomId } = useParams();
     const { socket } = useSocket();
     const category = "a nothingburger";
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    // Note: moved variables to Room.js
+    // const [guesses, setGuesses] = useState([
+    //     {userId: "user_1", votes: 3, voterIds: [{voterId: "user_3"}, {voterId: "user_6"}, {voterId: "user_9"}]},
+    //     {userId: "user_2", votes: 0, voterIds: []},
+    //     {userId: "user_3", votes: 0, voterIds: []},
+    //     {userId: "user_4", votes: 0, voterIds: []},
+    //     {userId: "user_5", votes: 0, voterIds: []},
+    //     {userId: "user_6", votes: 1, voterIds: [{voterId: "user_5"}]},
+    //     {userId: "user_7", votes: 0, voterIds: []},
+    //     {userId: "user_8", votes: 0, voterIds: []},
+    //     {userId: "user_9", votes: 4, voterIds: [{voterId: "user_2"}, {voterId: "user_4"}, {voterId: "user_7"}]}
+    // ]);
+    // const [players, setPlayers] = useState([
+    //     {id: "user_1", name: "user_one", isHost: true, totalScore: 6, trickScore: 0, artScore: 6},
+    //     {id: "user_2", name: "user_two", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_3", name: "user_three", isHost: false, totalScore: 1, trickScore: 0, artScore: 0},
+    //     {id: "user_4", name: "user_four", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_5", name: "user_five", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_6", name: "user_six", isHost: false, totalScore: 2, trickScore: 1, artScore: 0},
+    //     {id: "user_7", name: "user_seven", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_8", name: "user_eight", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_9", name: "user_nine", isHost: false, totalScore: 5, trickScore: 4, artScore: 0}
+    // ]);
     const [correct, setCorrect] = useState([]);
     const [score, setScore] = useState(0);
 
@@ -74,6 +100,23 @@ function Results({setViewCurr, setViewNext, players, setPlayers, guesses, setGue
         setViewNext(true);
     }
 
+    function handleClick() {
+        setIsButtonDisabled(true);
+        socket.emit('resultsSubmitted', { room: roomId});
+    }
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('resultsDone', (data) => {
+                handleNextBtn();
+            });
+    
+            return () => {
+                socket.off('resultsDone');
+            };
+        }
+    }, [socket]);
+
     return(
         <div className="background pt-4 custom-text min-h-screen max-h-max">
             {/* display room and page title for testing */}
@@ -98,7 +141,7 @@ function Results({setViewCurr, setViewNext, players, setPlayers, guesses, setGue
                         <BonusMessage className="flex shrink"/>
                     </div>
                     <p className="sub-header">Your Score: {score}</p>
-                    <button onClick={handleNextBtn} className="blue-button size-fit px-4 py-2 mt-0" data-testid="results-ctn-btn" >Continue</button>
+                    <button onClick={handleClick} disabled={isButtonDisabled} className="blue-button size-fit px-4 py-2 mt-0" data-testid="results-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

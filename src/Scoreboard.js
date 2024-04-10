@@ -1,12 +1,26 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useSocket } from './context/SocketContext';
 
 function Scoreboard({setViewCurr, setViewNext, players, setPlayers, guesses, setGuesses, setViewNextRound, setViewFinalScore, roundCount, usedIndexes, setRoundCount, setUsedIndexes}) {
     const { roomId } = useParams();
+    const { socket } = useSocket();
+    // Note: moved variables to Room.js
+    // const [players, setPlayers] = useState([
+    //     {id: "user_1", name: "user_one", isHost: true, totalScore: 6, trickScore: 0, artScore: 6},
+    //     {id: "user_2", name: "user_two", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_3", name: "user_three", isHost: false, totalScore: 1, trickScore: 0, artScore: 0},
+    //     {id: "user_4", name: "user_four", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_5", name: "user_five", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_6", name: "user_six", isHost: false, totalScore: 2, trickScore: 1, artScore: 0},
+    //     {id: "user_7", name: "user_seven", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_8", name: "user_eight", isHost: false, totalScore: 0, trickScore: 0, artScore: 0},
+    //     {id: "user_9", name: "user_nine", isHost: false, totalScore: 5, trickScore: 4, artScore: 0}
+    // ]);
     const [nextArtist, setNextArtist] = useState(null);
     const [bestTrickster, setBestTrickster] = useState(null);
     const [bestArtist, setBestArist] = useState(null);
-
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     useEffect(() => {
         sortUsers();
         setGuesses([]);
@@ -82,17 +96,28 @@ function Scoreboard({setViewCurr, setViewNext, players, setPlayers, guesses, set
             );
         }
     }
+    const handleScoreSubmit = () => {
+        setIsButtonDisabled(true);
+        socket.emit('scoreSubmitted', { room: roomId});
+      }
 
-    function handleNextBtn() {
+      useEffect(() => {
+        if (socket) {
+            socket.on('scoreDone', (roundCount) => {
+                handleNextBtn(roundCount);
+            });
+    
+            return () => {
+                socket.off('scoreDone');
+            };
+        }
+    }, [socket]);
+    function handleNextBtn(roundCount) {
         setViewCurr(false);
         // if 3 rounds have occured
         if(roundCount == 3) {
             setViewFinalScore(true);
         // if ever player has gotten a turn to draw, start next round 
-        } else if(players.length == usedIndexes.length) {
-            setRoundCount(roundCount + 1);
-            setUsedIndexes([]);
-            setViewNextRound(true);
         } else {
             setViewNext(true);
         }
@@ -127,7 +152,7 @@ function Scoreboard({setViewCurr, setViewNext, players, setPlayers, guesses, set
                         <p className="large-text">{nextArtist}</p>
                     </div>
                     <GameMessage />
-                    <button onClick={handleNextBtn}  className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
+                    <button onClick={handleScoreSubmit} disabled={isButtonDisabled} className="blue-button cursor-pointer size-fit px-4 py-2" data-testid="scoreboard-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

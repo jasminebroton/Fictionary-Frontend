@@ -24,6 +24,10 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
     const [brushSize, setBrushSize] = useState(2);
     const [counter, setCounter] = useState(180);
     const [timer, setTimer] = useState("0:00");
+    const [isDrawingDisabled, setIsDrawingDisabled] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+    const [isDrawingSubmitted, setIsDrawingSubmitted] = useState(false);
+    const [isGuessSubmitted, setIsGuessSubmitted] = useState(false);
 
     useEffect(() => {
         if (socket) {
@@ -94,7 +98,11 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
             return !view;
         });
     }
-
+    const handleNextBtn = useCallback(() => {
+        setViewNext(true);
+        setViewCurr(false);
+        setCounter(180);
+    }, [setViewCurr, setViewNext, setCounter]);
     //Word retrieval 
     useEffect(() => {
 
@@ -137,9 +145,15 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                 if(view){
                     setGuesses([...guesses, {text: category.category, userId: socket.id, voterIds: []}]);
                 }
-                else{
-                    const guess = document.getElementById("guess").value;
-                    setGuesses([...guesses, {text: guess, userId: socket.id, voterIds: []}]);
+                else { 
+                   const guess = document.getElementById("guess").value;
+                  if(isDrawingSubmitted && !isGuessSubmitted) {
+                   setGuesses([...guesses, {text: guess, userId: socket.id, voterIds: []}]);
+                   setIsGuessSubmitted(true);
+                   socket.emit('guessSubmitted', { room: roomId });
+        }
+                  
+             
                 }
             }
         } while (!socket);
@@ -148,19 +162,43 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
     //placeholder until the drawing can actually be sent to the backend
     const submitDrawing = useCallback(() => {
         submitGuess();
-        setViewNext(true);
-        setViewCurr(false);
-        setCounter(180);
-        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
-        // setCounter(10);
-    }, [setViewCurr, setViewNext, setCounter]);
+        setIsDrawingDisabled(true);
+        socket.emit('drawingSubmitted', { room: roomId })
+    }, [roomId, socket]);
 
+    
     useEffect(() => {
         if (counter <= 0) {
             submitDrawing();
         }
     }, [counter, viewCurr, submitDrawing]);
 
+    useEffect(() => {
+        if (socket) {
+            socket.on('timeToGuess', (status) => {
+                setIsDrawingDisabled(status);
+                setIsButtonDisabled(!status);
+                setIsDrawingSubmitted(status);
+            });
+            return () => {
+                socket.off('timeToGuess');
+            };
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('allGuessed', (data) => {
+                console.log('All guessed happened');
+                handleNextBtn();
+            });
+    
+            return () => {
+                socket.off('allGuessed');
+            };
+        }
+    }, [socket, handleNextBtn]);
+    
     function sendMessage() { 
         const messageInput = document.getElementById("message");
         const message = messageInput.value;
@@ -192,18 +230,17 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                 <div className="bg-[#cc6b49] text-[#ece6c2] font-sans" onClick={swapView}>Switch to "Trickster" View</div>
                 {/* <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas/></div> */}
                 <div className="background custom-text grid grid-cols-4 grid-rows-3">
-                    <div className="col-start-2 col-span-2">
+                    <div className="col-start-2 col-span-2 px-12">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
                         <p className="header">WORD IS:</p>{/*Change to word -> return word */}
                         <p className="large-text">{word}</p>
                     </div>
                     <p className="timer">{timer}</p>
-
                     <form>
                         <section className="row-start-2">
                             <fieldset>
-                                <legend className="large-text">Drawing Tools</legend>
+                                <legend className="text-5xl py-8">Drawing Tools</legend>
                                 <p>
                                     <label htmlFor="tool_1">Small </label>
                                     <input type="radio" name="tool" id="tool_1" value="1" onChange={onOptionChange} />
@@ -224,7 +261,8 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                         </section>
                         <section className="row-start-3 pt-5 ">
                             <p>
-                                <label className="large-text" htmlFor="colorPicker">Color Picker &nbsp;</label>
+                                <label className="text-5xl" htmlFor="colorPicker">Color Picker &nbsp;</label>
+                                <br /> <br />
                                 <select id="colorPicker" name="color" onChange={onOptionChange}>
                                     <option id="black" value="black">Black</option>
                                     <option id="red" value="red">Red</option>
@@ -241,7 +279,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
 
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas/></div>
 
-                    <div onClick={submitDrawing} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
+                    <div onClick={submitDrawing} disabled={isDrawingDisabled} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
                 </div>
             </div>
         );
@@ -264,7 +302,6 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
 
                 <div className="col-start-2 col-span-2 row-span-3">
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
-                    {artist && <p>User {artist.name} is drawing</p>}
                 </div>
                 
                 <div className = "col-start-4 row-span-2">
@@ -279,11 +316,11 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                         <div className="blue-button" onClick={sendMessage}>Send</div>
                     </div>
                 </div>
-
                 <form className="row-start-4 col-span-4">
                     <p>
                         <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" maxlength="15" placeholder="Enter Your Guess Here" />
                     </p>
+                    <div className="blue-button" onClick={submitGuess} disabled={isButtonDisabled}>Submit Guess</div>
                 </form>
             </div>
         </div>
@@ -373,7 +410,7 @@ function MyCanvas() {
             ref={canvasRef}
             width={443}
             height={350}
-            className="bg-white shadow-lg border-2 border-gray-300 m-10"
+            className="bg-white shadow-lg border-2 border-gray-300 m-10 h-11/12 w-11/12"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

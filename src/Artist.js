@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
 import { useSocket } from './context/SocketContext';
 
 function Artist({ viewCurr, setViewCurr, setViewNext }) {
+    const { roomId } = useParams();
     const [count, setCount] = useState(null);
     const [artist, setArtist] = useState(null);
+    const [error, setError] = useState(null);
     const { socket } = useSocket();
 
     const handleNext = useCallback(() => {
@@ -12,28 +15,37 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
     }, [setViewCurr, setViewNext]);
 
     useEffect(() => {
-        socket.emit('requestUserList'); // Assuming room ID is not needed or is handled globally
-        console.log('Requesting user list');
-    
-        const updateUserList = (users) => {
-            console.log('Received user list:', users);
-            const host = users.find(user => user.isHost);
-            if (host) {
-                console.log('Setting artist as:', host.name);
-                setArtist(host.name); // Assuming 'host.name' contains the host's name
-            }
-        };
-    
         if (socket) {
+            socket.emit('requestUserList', roomId);
+            console.log('Requesting user list for room:', roomId);
+
+            const updateUserList = (users) => {
+                console.log('Received user list:', users);
+                const host = users.find(user => user.isHost);
+                if (host) {
+                    console.log('Setting artist as:', host.name);
+                    setArtist(host.name);
+                } else {
+                    console.log('No host found in the user list');
+                    setError('No host found in the user list');
+                }
+            };
+
+            const handleError = (error) => {
+                console.error('Error:', error);
+                setError(error);
+            };
+
             socket.on('updateUserList', updateUserList);
-    
+            socket.on('error', handleError);
+
             return () => {
                 console.log('Cleaning up');
                 socket.off('updateUserList', updateUserList);
+                socket.off('error', handleError);
             };
         }
-    }, [socket]);
-    
+    }, [socket, roomId]);
 
     useEffect(() => {
         const delay = setTimeout(() => {
@@ -44,7 +56,6 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
 
     useEffect(() => {
         if (count === null) return;
-
         const countdown = setTimeout(() => {
             if (count > 1) {
                 setCount(count - 1);
@@ -52,7 +63,6 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
                 handleNext();
             }
         }, 1000);
-
         return () => clearTimeout(countdown);
     }, [count, handleNext]);
 
@@ -65,7 +75,15 @@ function Artist({ viewCurr, setViewCurr, setViewNext }) {
                 <div>
                     THE ARTIST IS <br /> <br />
                 </div>
-                <div className="animate-bounce">{artist || 'Loading...'}</div>
+                <div className="animate-bounce">
+                    {artist ? (
+                        artist
+                    ) : error ? (
+                        <div className="text-red-500">{error}</div>
+                    ) : (
+                        'Loading...'
+                    )}
+                </div>
             </div>
             {count !== null && (
                 <div>

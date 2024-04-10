@@ -7,13 +7,18 @@ var theView;
 var globalBrushSize;
 var globalPaintColor;
 
-function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players, setPlayers, guesses, setGuesses, usedIndexes, setUsedIndexes }) {
+const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
+
+
+function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players, setPlayers, guesses, setGuesses, usedIndexes, setUsedIndexes, round, setRound}){
     const { roomId } = useParams();
     // const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({ category: "Animals" });
     const [view, setView] = useState(isHost);
     const [artist, setArtist] = useState({});
     const { socket } = useSocket();
+    const [word, setWord] = useState();
+
     theView = view;
     const [paintColor, setPaintColor] = useState('black');
     const [brushSize, setBrushSize] = useState(2);
@@ -29,27 +34,33 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                 const currentArtist = users.find((user) => user.isHost);
                 setArtist(currentArtist);
             });
-
+    
             socket.on('drawingPrivilege', (hasPrivilege) => {
                 setIsHost(hasPrivilege);
             });
-
-            socket.on('categorySelected', (selectedCategory) => {
+            
+            socket.on('currentCategory', (selectedCategory) => {
                 setCategory({ category: selectedCategory });
-            });
-
+              });
+    
             socket.on('gameStarted', () => {
                 // Handle game start logic
             });
-
+    
             socket.on('error', (errorMessage) => {
                 console.error(errorMessage);
             });
-
+    
+            socket.on('currentCategory', (selectedCategory) => {
+  setCategory({ category: selectedCategory });
+});
+            // Request the current category when the component mounts
+            socket.emit('requestCurrentCategory', roomId);
+    
             return () => {
                 socket.off('updateUserList');
                 socket.off('drawingPrivilege');
-                socket.off('categorySelected');
+                socket.off('currentCategory');
                 socket.off('gameStarted');
                 socket.off('error');
             };
@@ -76,12 +87,48 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
         });
     }, [counter, setTimer]);
 
+    //temporary function to test both views at once
     function swapView() {
         setView(() => {
             theView = !view;
             return !view;
         });
     }
+
+    //Word retrieval 
+    useEffect(() => {
+
+        setRound(round+1);
+        //converts roomID to a number, add round
+        function seedGeneration() {
+            let num = "";
+            for (let i = 0; i < roomId.length; i++) {
+              num += roomId.charCodeAt(i);
+            }
+            let number = parseInt(num);
+            return number+round;
+        }
+        let seed = seedGeneration();
+
+        //let theCategory="animals";
+        let theCategory= category.category;
+        
+
+        async function fetchWord() {
+            //swap Url on deployment (back end url)
+            const response = await fetch(`${EXPRESS_SERVER_URL}words?seed=${seed}&category=${theCategory}`);
+            console.log(response);
+
+            const word = await response.json();
+            console.log(word);
+            setWord(word);
+        }
+        fetchWord().catch(console.dir);
+        // console.log("THIS IS BEING CALLED");
+        //}
+
+    },[isHost,roomId,category]);
+
 
     // Note for testing: make sure you only try to submit the drawing of the current artist
     function submitGuess(){
@@ -98,11 +145,14 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
         } while (!socket);
     }
 
+    //placeholder until the drawing can actually be sent to the backend
     const submitDrawing = useCallback(() => {
         submitGuess();
         setViewNext(true);
         setViewCurr(false);
         setCounter(180);
+        /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
+        // setCounter(10);
     }, [setViewCurr, setViewNext, setCounter]);
 
     useEffect(() => {
@@ -119,7 +169,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
             messageInput.value = '';
         }
     }
-
+     // Used for changing brushSize and paintColor
     function onOptionChange(e) {
         const theData = e.target.value;
         if (theData === "1" || theData === "2" || theData === "4" || theData === "32")
@@ -128,6 +178,8 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
             setPaintColor(theData);
     }
 
+    // Allows globalPaintColor and globalBrushSize to update outside of when the values are changed
+    // via their respective buttons
     useEffect(() => {
         globalPaintColor = paintColor;
         globalBrushSize = brushSize;
@@ -136,13 +188,15 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
     if (view) {
         return (
             <div>
+                {/* button for testing both views */}
                 <div className="bg-[#cc6b49] text-[#ece6c2] font-sans" onClick={swapView}>Switch to "Trickster" View</div>
+                {/* <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas/></div> */}
                 <div className="background custom-text grid grid-cols-4 grid-rows-3">
                     <div className="col-start-2 col-span-2">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
-                        <p className="header">CATEGORY IS:</p>
-                        <p className="large-text">{category.category}</p>
+                        <p className="header">WORD IS:</p>{/*Change to word -> return word */}
+                        <p className="large-text">{word}</p>
                     </div>
                     <p className="timer">{timer}</p>
 
@@ -185,7 +239,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                         </section>
                     </form>
 
-                    <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
+                    <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas/></div>
 
                     <div onClick={submitDrawing} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
                 </div>
@@ -194,6 +248,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
     }
     return (
         <div>
+            {/* button for testing both views */}
             <div className="bg-[#73bda8] text-[#6f5643] font-sans" onClick={swapView}>Switch to "Artist" View</div>
 
             <div className="background custom-text grid grid-cols-4 grid-rows-4">
@@ -211,8 +266,9 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
                     {artist && <p>User {artist.name} is drawing</p>}
                 </div>
-
-                <div className="col-start-4 row-span-2">
+                
+                <div className = "col-start-4 row-span-2">
+                    {/*placeholder until the actual chatroom can be displayed*/}
                     <p className="bg-[#6f5643] text-[#ece6c2] size-full">Chat Room</p>
                     <div>
                         <form>
@@ -238,10 +294,22 @@ function MyCanvas() {
     const { roomId } = useParams();
     const canvasRef = useRef(null);
     const [drawing, setDrawing] = useState(false);
+
     const [lastPos, setLastPos] = useState(null);
     const { socket } = useSocket();
 
     useEffect(() => {
+        // socket.current = io('http://localhost:8000');
+        // socket.current.on('connect', () => {
+        //     console.log("Connected to Socket.IO server");
+        //     // socket.current.emit('joinRoom', roomId);
+        // });
+
+        // socket.current.on('drawingPrivilege', (hasPrivilege) => {
+        //     setCanDraw(hasPrivilege);
+        //     console.log(`Received drawing privilege: ${hasPrivilege}`);
+        // });
+
         socket.on('drawing', (data) => {
             drawLine(data.x0, data.y0, data.x1, data.y1, data.color, data.size);
         });

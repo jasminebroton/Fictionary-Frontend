@@ -29,7 +29,7 @@ code {
   }
 
   .timer{
-    @apply bg-[#cc6b49] text-[#ece6c2] text-3xl px-5 py-2 self-baseline justify-self-center;
+    @apply bg-[#cc6b49] text-[#ece6c2] text-6xl px-5 py-2 self-baseline justify-self-center;
   }
 
   .text-entry-box{

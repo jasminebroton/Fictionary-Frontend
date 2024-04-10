@@ -12,7 +12,7 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
     const [isButtonDisabled, setButtonDisabled] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const { socket } = useSocket(); // Assume socket context is provided
-
+    // submits vote to the backend
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
         if (selectedCategory) {
@@ -20,12 +20,11 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
         }
     }, [socket, roomId, selectedCategory]);
 
+
+    //navigates away from the page
     const handleNextBtn = useCallback(() => {
-        setViewNext(true);
-        setViewCurr(false);
-        setCounter(60);
-        socket.emit('endVoting', roomId); // Inform the server when navigating away
-    }, [setViewCurr, setViewNext, setCounter, socket, roomId]);
+     socket.emit('endVoting', roomId); // Inform the server when navigating away
+    }, [socket, roomId]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -43,7 +42,7 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
             return seconds > 9 ? `${minutes}:${seconds}` : `${minutes}:0${seconds}`;
         });
     }, [counter]);
-
+    //navigates away if timer is over
     // Automatically navigate to the next view when the timer reaches zero
     useEffect(() => {
         if (counter <= 0) {
@@ -51,11 +50,24 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
         }
     }, [counter, handleNextBtn]);
 
+    useEffect(() => {
+        if (socket) {
+            socket.on('allVoted', (submits) => {
+                handleNextBtn();
+            });
+    
+            return () => {
+                socket.off('allVoted');
+            };
+        }
+    }, [socket, handleNextBtn]);
+    
     // Handling real-time category selection
     useEffect(() => {
         socket.on('categorySelected', (selectedCategory) => {
             setViewNext(true);
             setViewCurr(false);
+            setCounter(60);
         });
 
         return () => {

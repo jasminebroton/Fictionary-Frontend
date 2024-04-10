@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import { useSocket } from './context/SocketContext';
 
 const Timer = ({viewCurr, seconds, setSeconds, handleNextBtn}) => {
+  
+
   useEffect(() => {
     // Update the timer every second
     const interval = setInterval(() => {
@@ -26,6 +29,7 @@ const Timer = ({viewCurr, seconds, setSeconds, handleNextBtn}) => {
     }
   }, [seconds, viewCurr, handleNextBtn]);
 
+  
   return (
     <div>
       <h1 className="large-text">Timer</h1>
@@ -60,21 +64,37 @@ const Canvas = () => {
   return (
     <div>
       <canvas
-      width={1000}
-      height={1000}
-      className="canvas"
+      className="canvas w-11/12 h-11/12"
       ></canvas>
     </div>
   );
 };
 
 function Voting({viewCurr, setViewCurr, setViewNext}) {
-    // const { roomId } = useParams();
+  const { socket } = useSocket();
+  const { roomId } = useParams();
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
     const [seconds, setSeconds] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [seconds, setSeconds] = useState(10);
- 
+
+    const handleVoteSubmit = () => {
+      setIsButtonDisabled(true);
+      socket.emit('voteSubmitted', { room: roomId});
+    }
+    useEffect(() => {
+      if (socket) {
+          socket.on('votingDone', (data) => {
+            console.log('voting done happened');
+              handleNextBtn();
+          });
+  
+          return () => {
+              socket.off('guessVotingDone');
+          };
+      }
+  }, [socket]);
     const handleNextBtn = useCallback(() => {
       setViewNext(true);
       setViewCurr(false);
@@ -101,7 +121,7 @@ function Voting({viewCurr, setViewCurr, setViewNext}) {
               </div>
               <div className="flex justify-center brown-button">
                 <div>
-                  <button onClick={handleNextBtn} type="button" >
+                  <button onClick={handleVoteSubmit} disabled={isButtonDisabled} type="button" >
                     Submit
                   </button>
                 </div>

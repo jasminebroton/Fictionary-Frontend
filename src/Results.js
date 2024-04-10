@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useSocket } from './context/SocketContext';
 
-function Results({setViewCurr, setViewNext, socket, setSocket, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
+function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
     const { roomId } = useParams();
     const category = "a nothingburger";
+    const { socket } = useSocket();
     // Note: moved variables to Room.js
     // const [guesses, setGuesses] = useState([
     //     {userId: "user_1", votes: 3, voterIds: [{voterId: "user_3"}, {voterId: "user_6"}, {voterId: "user_9"}]},

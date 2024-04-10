@@ -19,6 +19,9 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
     const [brushSize, setBrushSize] = useState(2);
     const [counter, setCounter] = useState(180);
     const [timer, setTimer] = useState("0:00");
+    const [isDrawingDisabled, setIsDrawingDisabled] = useState(false);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+
 
     useEffect(() => {
         if (socket) {
@@ -81,12 +84,21 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
             return !view;
         });
     }
-
-    const submitDrawing = useCallback(() => {
+    const handleNextBtn = useCallback(() => {
         setViewNext(true);
         setViewCurr(false);
         setCounter(180);
     }, [setViewCurr, setViewNext, setCounter]);
+
+    const submitGuess = () => {
+        console.log('submit guess happened');
+        setIsButtonDisabled(true);
+        socket.emit('guessSubmitted', { room: roomId });
+    }
+    const submitDrawing = useCallback(() => {
+        setIsDrawingDisabled(true);
+        socket.emit('drawingSubmitted', { room: roomId });
+    }, [roomId, socket]);
 
     useEffect(() => {
         if (counter <= 0) {
@@ -94,6 +106,31 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
         }
     }, [counter, viewCurr, submitDrawing]);
 
+    useEffect(() => {
+        if (socket) {
+            socket.on('timeToGuess', (data) => {
+                console.log('Time to guess happened');
+                setIsButtonDisabled(false);
+            });
+            return () => {
+                socket.off('timeToGuess');
+            };
+        }
+    }, [socket]);
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('allGuessed', (data) => {
+                console.log('All guessed happened');
+                handleNextBtn();
+            });
+    
+            return () => {
+                socket.off('allGuessed');
+            };
+        }
+    }, [socket, handleNextBtn]);
+    
     function sendMessage() { 
         const messageInput = document.getElementById("message");
         const message = messageInput.value;
@@ -121,18 +158,17 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
             <div>
                 <div className="bg-[#cc6b49] text-[#ece6c2] font-sans" onClick={swapView}>Switch to "Trickster" View</div>
                 <div className="background custom-text grid grid-cols-4 grid-rows-3">
-                    <div className="col-start-2 col-span-2">
+                    <div className="col-start-2 col-span-2 px-12">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
                         <p className="header">CATEGORY IS:</p>
                         <p className="large-text">{category.category}</p>
                     </div>
                     <p className="timer">{timer}</p>
-
                     <form>
                         <section className="row-start-2">
                             <fieldset>
-                                <legend className="large-text">Drawing Tools</legend>
+                                <legend className="text-5xl py-8">Drawing Tools</legend>
                                 <p>
                                     <label htmlFor="tool_1">Small </label>
                                     <input type="radio" name="tool" id="tool_1" value="1" onChange={onOptionChange} />
@@ -153,7 +189,8 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                         </section>
                         <section className="row-start-3 pt-5 ">
                             <p>
-                                <label className="large-text" htmlFor="colorPicker">Color Picker &nbsp;</label>
+                                <label className="text-5xl" htmlFor="colorPicker">Color Picker &nbsp;</label>
+                                <br /> <br />
                                 <select id="colorPicker" name="color" onChange={onOptionChange}>
                                     <option id="black" value="black">Black</option>
                                     <option id="red" value="red">Red</option>
@@ -170,7 +207,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
 
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
 
-                    <div onClick={submitDrawing} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
+                    <div onClick={submitDrawing} disabled={isDrawingDisabled} className="brown-button w-fit col-start-4 row-start-3" >Submit Drawing</div>
                 </div>
             </div>
         );
@@ -211,6 +248,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                     <p>
                         <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here" />
                     </p>
+                    <div className="blue-button" onClick={submitGuess} disabled={isButtonDisabled}>Submit Guess</div>
                 </form>
             </div>
         </div>
@@ -286,9 +324,9 @@ function MyCanvas() {
     return (
         <canvas
             ref={canvasRef}
-            width={443}
-            height={350}
-            className="bg-white shadow-lg border-2 border-gray-300 m-10"
+            //width={1/4}
+            //height={1/4}
+            className="bg-white shadow-lg border-2 border-gray-300 m-10 h-11/12 w-11/12"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

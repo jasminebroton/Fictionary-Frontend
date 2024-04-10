@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSocket } from './context/SocketContext';
 
-function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
+
+function Results({setViewCurr, setViewNext, players, setPlayers, guesses, setGuesses, roundCount, setRoundCount }) {
+
     const { roomId } = useParams();
-    const category = "a nothingburger";
     const { socket } = useSocket();
+    const category = "a nothingburger";
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     // Note: moved variables to Room.js
     // const [guesses, setGuesses] = useState([
@@ -42,21 +44,33 @@ function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, gues
     }
 
     useEffect(() => {
-        let mySocketId = null;
-        socket.on('yourSocketId', ({ id }) => {
-            mySocketId = id;
-            setScore(players.find((player) => player.id === mySocketId).totalScore);
-        });
+            if (socket) {
+                socket.emit('joinRoom', { userid: socket.id, room: roomId, userName: 'User' });
 
-        // Setup event listeners for socket
-        // Note: When the mechanism for making/voting on guesses is added, add a listener for the guesses here as well
-        socket.on('updateUserList', (UpdatedPlayers) => {
-          setPlayers(UpdatedPlayers);
-          setScore(players.find((player) => player.id === mySocketId).totalScore);
+                socket.on('updateUserList', (UpdatedPlayers) => {
+                    setPlayers(UpdatedPlayers);
+                    setScore(players.find((player) => player.id === socket.id).totalScore);
+                });
+      
+                socket.on('gameStarted', () => {
+                    // Handle game start logic
+                });
+      
+                socket.on('error', (errorMessage) => {
+                    console.error(errorMessage);
+                });
+      
+                return () => {
+                    socket.off('updateUserList');
+                    socket.off('gameStarted');
+                    socket.off('error');
+                };
+            }
+        }, [socket, roomId]);
+        
+        useEffect(() => {
+            findCorrect();
         });
-
-        findCorrect();
-      }, []);
     
     function MyCanvas() {
         return (
@@ -117,12 +131,12 @@ function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, gues
                 <div className="flex flex-col items-center gap-4">
                     <p className="large-text">Everyone's Guesses</p>
                     <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-4 shrink justify-center items-center">
-                        {guesses.map(guess => <div className="large-text bg-[#499b83] text-[#ece6c2] p-2" key={guess.userId}> {guess.userId}</div> )}
+                        {guesses.map(guess => <div className="large-text bg-[#499b83] text-[#ece6c2] p-2" key={guess.userId}>{players.find((player) => player.id === guess.userId).name + ": " + guess.text}</div> )}
                     </div>
                     {/* status board(?) */}
                     <div className="flex flex-col shrink text-left bg-[#6f5643] text-[#ece6c2] border-solid px-4 py-2 max-w-96">
                         <div className="mb-4">
-                            {guesses.map(guess => guess.votes != undefined && guess.votes > 0 ? <div key={guess.userId}>{players.find((player) => player.id === guess.userId).name} scored {players.find((player) => player.id === guess.userId).isHost ? guess.votes * 2: guess.votes} {players.find((player) => player.id === guess.userId).isHost ? "artist" : "trickster"} points.</div> : <div></div>)}
+                            {guesses.map(guess => guess.voterIds.length > 0 ? <div key={guess.userId}>{players.find((player) => player.id === guess.userId).name} scored {players.find((player) => player.id === guess.userId).isHost ? guess.voterIds.length * 2 : guess.voterIds.length} {players.find((player) => player.id === guess.userId).isHost ? "artist" : "trickster"} points.</div> : <div></div>)}
                         </div>
                         <BonusMessage className="flex shrink"/>
                     </div>

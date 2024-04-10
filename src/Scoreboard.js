@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSocket } from './context/SocketContext';
 
-function Scoreboard({setViewCurr, setViewNext, players, setPlayers, setViewNextRound, setViewFinalScore, roundCount, usedIndexes, setRoundCount, setUsedIndexes}) {
+function Scoreboard({setViewCurr, setViewNext, players, setPlayers, guesses, setGuesses, setViewNextRound, setViewFinalScore, roundCount, usedIndexes, setRoundCount, setUsedIndexes}) {
     const { roomId } = useParams();
     const { socket } = useSocket();
     // Note: moved variables to Room.js
@@ -23,6 +23,7 @@ function Scoreboard({setViewCurr, setViewNext, players, setPlayers, setViewNextR
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     useEffect(() => {
         sortUsers();
+        setGuesses([]);
     }, []);
 
     function sortUsers(){

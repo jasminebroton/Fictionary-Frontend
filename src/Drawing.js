@@ -105,7 +105,9 @@ function Drawing({viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players
             return number+round;
         }
         let seed = seedGeneration();
+        //let theCategory = category.category;
         let theCategory = category.category;
+        console.log(category.category);
 
         async function fetchWords() {
             //swap Url on deployment (back end url)

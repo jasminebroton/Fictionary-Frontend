@@ -124,7 +124,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
         // console.log("THIS IS BEING CALLED");
         //}
 
-    },[isHost,roomId]);
+    },[isHost,roomId,category]);
 
 
     //placeholder until the drawing can actually be sent to the backend

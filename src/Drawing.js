@@ -9,7 +9,8 @@ var globalPaintColor;
 
 const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Drawing({viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
+
+function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
     const { roomId } = useParams();
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({ category: "Animals" });
@@ -105,19 +106,21 @@ function Drawing({viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players
             return number+round;
         }
         let seed = seedGeneration();
-        //let theCategory = category.category;
-        let theCategory = category.category;
-        console.log(category.category);
 
-        async function fetchWords() {
+        //let theCategory="animals";
+        let theCategory= category.category;
+        
+
+        async function fetchWord() {
             //swap Url on deployment (back end url)
             const response = await fetch(`${EXPRESS_SERVER_URL}words?seed=${seed}&category=${theCategory}`);
             console.log(response);
+
             const word = await response.json();
             console.log(word);
             setWord(word);
         }
-        fetchWords().catch(console.dir);
+        fetchWord().catch(console.dir);
         // console.log("THIS IS BEING CALLED");
         //}
 

@@ -26,33 +26,37 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
 
     useEffect(() => {
         if (socket) {
-            socket.emit('joinRoom', { userid: socket.id, room: roomId, userName: 'User' });
-
             socket.on('updateUserList', (users) => {
                 const currentArtist = users.find((user) => user.isHost);
                 setArtist(currentArtist);
             });
-
+    
             socket.on('drawingPrivilege', (hasPrivilege) => {
                 setIsHost(hasPrivilege);
             });
-
-            socket.on('categorySelected', (selectedCategory) => {
+            
+            socket.on('currentCategory', (selectedCategory) => {
                 setCategory({ category: selectedCategory });
-            });
-
+              });
+    
             socket.on('gameStarted', () => {
                 // Handle game start logic
             });
-
+    
             socket.on('error', (errorMessage) => {
                 console.error(errorMessage);
             });
-
+    
+            socket.on('currentCategory', (selectedCategory) => {
+  setCategory({ category: selectedCategory });
+});
+            // Request the current category when the component mounts
+            socket.emit('requestCurrentCategory', roomId);
+    
             return () => {
                 socket.off('updateUserList');
                 socket.off('drawingPrivilege');
-                socket.off('categorySelected');
+                socket.off('currentCategory');
                 socket.off('gameStarted');
                 socket.off('error');
             };

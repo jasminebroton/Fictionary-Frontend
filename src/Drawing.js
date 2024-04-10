@@ -9,7 +9,7 @@ var globalPaintColor;
 
 const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
-function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist, setArtist, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
+function Drawing({viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
     const { roomId } = useParams();
     const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({ category: "Animals" });
@@ -105,21 +105,9 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
             return number+round;
         }
         let seed = seedGeneration();
-        let theCategory;
+        let theCategory = category.category;
 
-        //request category !! -can't test
-        socket.emit('requestCurretnCategory',roomId);
-
-        socket.on('currentCategory', function(category) {
-            
-            console.log('Current category:', category);
-            setCategory(category);
-            theCategory = category;
-        });
-
-        
-
-        async function fetchCategories() {
+        async function fetchWords() {
             //swap Url on deployment (back end url)
             const response = await fetch(`${EXPRESS_SERVER_URL}words?seed=${seed}&category=${theCategory}`);
             console.log(response);
@@ -127,7 +115,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
             console.log(word);
             setWord(word);
         }
-        fetchCategories().catch(console.dir);
+        fetchWords().catch(console.dir);
         // console.log("THIS IS BEING CALLED");
         //}
 
@@ -184,8 +172,8 @@ function Drawing({viewCurr, setViewCurr, setViewNext, socket, setSocket, artist,
                     <div className="col-start-2 col-span-2">
                         <p className="sub-header">Fictionary</p>
                         <p className="pb-4">Room: {roomId}</p>
-                        <p className="header">WORD IS:{word}</p>{/*Change to word -> return word */}
-                        <p className="large-text">{category.category}</p>
+                        <p className="header">WORD IS:</p>{/*Change to word -> return word */}
+                        <p className="large-text">{word}</p>
                     </div>
                     <p className="timer">{timer}</p>
 

@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSocket } from './context/SocketContext';
 
-function Lobby({ setViewCurr, setViewNext, isHost, setIsHost, guestName, setSocket }) {
+function Lobby({ setViewCurr, setViewNext, isHost, setIsHost, guestName, setSocket, players, setPlayers }) {
   const navigate = useNavigate();
   const { roomId } = useParams();
-  const [players, setPlayers] = useState([]);
+  // const [players, setPlayers] = useState([]);
   const { socket } = useSocket();
   const joinedRoom = useRef(false);
 

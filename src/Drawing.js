@@ -7,9 +7,9 @@ var theView;
 var globalBrushSize;
 var globalPaintColor;
 
-function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes }) {
+function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, players, setPlayers, guesses, setGuesses, usedIndexes, setUsedIndexes }) {
     const { roomId } = useParams();
-    const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
+    // const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({ category: "Animals" });
     const [view, setView] = useState(isHost);
     const [artist, setArtist] = useState({});
@@ -25,6 +25,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
             socket.emit('joinRoom', { userid: socket.id, room: roomId, userName: 'User' });
 
             socket.on('updateUserList', (users) => {
+                setPlayers(users);
                 const currentArtist = users.find((user) => user.isHost);
                 setArtist(currentArtist);
             });
@@ -82,7 +83,23 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
         });
     }
 
+    // Note for testing: make sure you only try to submit the drawing of the current artist
+    function submitGuess(){
+        do{
+            if(socket){
+                if(view){
+                    setGuesses([...guesses, {text: category.category, userId: socket.id, voterIds: []}]);
+                }
+                else{
+                    const guess = document.getElementById("guess").value;
+                    setGuesses([...guesses, {text: guess, userId: socket.id, voterIds: []}]);
+                }
+            }
+        } while (!socket);
+    }
+
     const submitDrawing = useCallback(() => {
+        submitGuess();
         setViewNext(true);
         setViewCurr(false);
         setCounter(180);
@@ -209,7 +226,7 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
 
                 <form className="row-start-4 col-span-4">
                     <p>
-                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here" />
+                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" maxlength="15" placeholder="Enter Your Guess Here" />
                     </p>
                 </form>
             </div>

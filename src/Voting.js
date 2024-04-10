@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-// import { useParams } from 'react-router-dom';
+import { useSocket } from './context/SocketContext';
+import { useParams } from 'react-router-dom';
 
 const Timer = ({viewCurr, seconds, setSeconds, handleNextBtn}) => {
   useEffect(() => {
@@ -34,28 +35,6 @@ const Timer = ({viewCurr, seconds, setSeconds, handleNextBtn}) => {
   );
 };
 
-const Grid = ({ data }) => {
-  // Split the data array into rows
-  const rows = [];
-  for (let i = 0; i < data.length; i += 3) {
-    rows.push(data.slice(i, i + 3));
-  }
-
-  return (
-    <div>
-      {rows.map((row, rowIndex) => (
-        <div>
-          {row.map((element, columnIndex) => (
-            <button className="yellow-button m-2 w-24 h-16">
-              {element !== null ? element : 'Empty'}
-            </button>
-          ))}
-        </div>
-      ))}
-    </div> 
-  );
-};
-
 const Canvas = () => {
   return (
     <div>
@@ -68,13 +47,50 @@ const Canvas = () => {
   );
 };
 
-function Voting({viewCurr, setViewCurr, setViewNext}) {
-    // const { roomId } = useParams();
-    const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
+function Voting({viewCurr, setViewCurr, setViewNext, guesses, setGuesses}) {
     const [seconds, setSeconds] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [seconds, setSeconds] = useState(10);
+    const { roomId } = useParams();
+    const { socket } = useSocket();
  
+    useEffect(() => {
+      if (socket) {
+          socket.emit('joinRoom', { userid: socket.id, room: roomId, userName: 'User' });
+
+          socket.on('gameStarted', () => {
+              // Handle game start logic
+          });
+
+          socket.on('error', (errorMessage) => {
+              console.error(errorMessage);
+          });
+
+          return () => {
+              socket.off('gameStarted');
+              socket.off('error');
+          };
+      }
+    }, [socket, roomId]);
+
+    const changeGuesses = useCallback((e) => {
+      do{
+        if(socket){
+          setGuesses(guesses.map((guess) => {
+              if(guess.voterIds.find((voterId) => voterId === socket.id)){
+                let index = guess.voterIds.indexOf(socket.id);
+                guess.voterIds.splice(index, 1);
+              }
+          }));
+          setGuesses(guesses.map((guess) => {
+            if(guess.userId === e.key){
+              guess.voterIds[guess.voterIds.length] = [{voterId: socket.id}];
+            }
+          }));
+        }
+      } while (!socket);
+    });
+
     const handleNextBtn = useCallback(() => {
       setViewNext(true);
       setViewCurr(false);
@@ -97,7 +113,9 @@ function Voting({viewCurr, setViewCurr, setViewNext}) {
               <div className="basis-1/2">
                 <p className='header'>CATEGORY IS</p> <br />
                 <p className='sub-header'>CATEGORY</p>
-                <Grid data = {data} />
+                <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-4 shrink justify-center items-center">
+                  {guesses.map((guess) => <button onclick={changeGuesses} className="yellow-button m-2 w-24 h-16" id="test" key={guess.userId}>{guess.text}</button>)}
+                </div>
               </div>
               <div className="flex justify-center brown-button">
                 <div>

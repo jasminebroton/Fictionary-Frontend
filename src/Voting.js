@@ -50,31 +50,8 @@ const Canvas = () => {
   );
 };
 
-function Voting({viewCurr, setViewCurr, setViewNext}) {
-  const { socket } = useSocket();
-  const { roomId } = useParams();
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const [data, setData] = useState(["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"]);
-    const [seconds, setSeconds] = useState(60);
-    /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
-    // const [seconds, setSeconds] = useState(10);
-
-    const handleVoteSubmit = () => {
-      setIsButtonDisabled(true);
-      socket.emit('voteSubmitted', { room: roomId});
-    }
-    useEffect(() => {
-      if (socket) {
-          socket.on('votingDone', (data) => {
-              handleNextBtn();
-          });
-  
-          return () => {
-              socket.off('guessVotingDone');
-          };
-      }
-  }, [socket]);
 function Voting({viewCurr, setViewCurr, setViewNext, guesses, setGuesses}) {
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [seconds, setSeconds] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [seconds, setSeconds] = useState(10);

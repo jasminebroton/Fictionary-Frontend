@@ -6,6 +6,7 @@ function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, gues
     const { roomId } = useParams();
     const category = "a nothingburger";
     const { socket } = useSocket();
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     // Note: moved variables to Room.js
     // const [guesses, setGuesses] = useState([
     //     {userId: "user_1", votes: 3, voterIds: [{voterId: "user_3"}, {voterId: "user_6"}, {voterId: "user_9"}]},
@@ -85,6 +86,23 @@ function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, gues
         setViewNext(true);
     }
 
+    function handleClick() {
+        setIsButtonDisabled(true);
+        socket.emit('resultsSubmitted', { room: roomId});
+    }
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('resultsDone', (data) => {
+                handleNextBtn();
+            });
+    
+            return () => {
+                socket.off('resultsDone');
+            };
+        }
+    }, [socket]);
+
     return(
         <div className="background pt-4 custom-text min-h-screen max-h-max">
             {/* display room and page title for testing */}
@@ -109,7 +127,7 @@ function Results({setViewCurr, setViewNext, setSocket, players, setPlayers, gues
                         <BonusMessage className="flex shrink"/>
                     </div>
                     <p className="sub-header">Your Score: {score}</p>
-                    <button onClick={handleNextBtn} className="blue-button size-fit px-4 py-2 mt-0" data-testid="results-ctn-btn" >Continue</button>
+                    <button onClick={handleClick} disabled={isButtonDisabled} className="blue-button size-fit px-4 py-2 mt-0" data-testid="results-ctn-btn" >Continue</button>
                 </div>
             </div>
         </div>

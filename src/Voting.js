@@ -86,7 +86,6 @@ function Voting({viewCurr, setViewCurr, setViewNext}) {
     useEffect(() => {
       if (socket) {
           socket.on('votingDone', (data) => {
-            console.log('voting done happened');
               handleNextBtn();
           });
   

@@ -16,6 +16,7 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
     const handleSubmit = useCallback((e) => {
         e.preventDefault();
         if (selectedCategory) {
+            setButtonDisabled(true);
             socket.emit('voteCategory', { roomId, category: selectedCategory });
         }
     }, [socket, roomId, selectedCategory]);

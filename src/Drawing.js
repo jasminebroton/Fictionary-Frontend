@@ -21,7 +21,8 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
     const [timer, setTimer] = useState("0:00");
     const [isDrawingDisabled, setIsDrawingDisabled] = useState(false);
     const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-
+    const [isDrawingSubmitted, setIsDrawingSubmitted] = useState(false);
+    const [isGuessSubmitted, setIsGuessSubmitted] = useState(false);
 
     useEffect(() => {
         if (socket) {
@@ -91,9 +92,11 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
     }, [setViewCurr, setViewNext, setCounter]);
 
     const submitGuess = () => {
-        console.log('submit guess happened');
         setIsButtonDisabled(true);
+        if(isDrawingSubmitted && !isGuessSubmitted) {
+        setIsGuessSubmitted(true);
         socket.emit('guessSubmitted', { room: roomId });
+        }
     }
     const submitDrawing = useCallback(() => {
         setIsDrawingDisabled(true);
@@ -108,9 +111,10 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
 
     useEffect(() => {
         if (socket) {
-            socket.on('timeToGuess', (data) => {
-                console.log('Time to guess happened');
-                setIsButtonDisabled(false);
+            socket.on('timeToGuess', (status) => {
+                setIsDrawingDisabled(status);
+                setIsButtonDisabled(!status);
+                setIsDrawingSubmitted(status);
             });
             return () => {
                 socket.off('timeToGuess');
@@ -229,7 +233,6 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
 
                 <div className="col-start-2 col-span-2 row-span-3">
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
-                    {artist && <p>User {artist.name} is drawing</p>}
                 </div>
 
                 <div className="col-start-4 row-span-2">
@@ -243,7 +246,6 @@ function Drawing({ viewCurr, setViewCurr, setViewNext, isHost, setIsHost, player
                         <div className="blue-button" onClick={sendMessage}>Send</div>
                     </div>
                 </div>
-
                 <form className="row-start-4 col-span-4">
                     <p>
                         <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here" />
@@ -324,8 +326,8 @@ function MyCanvas() {
     return (
         <canvas
             ref={canvasRef}
-            //width={1/4}
-            //height={1/4}
+            width={443}
+            height={350}
             className="bg-white shadow-lg border-2 border-gray-300 m-10 h-11/12 w-11/12"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}

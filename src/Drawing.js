@@ -10,9 +10,9 @@ var globalPaintColor;
 const EXPRESS_SERVER_URL = process.env.REACT_APP_SOCKET_SERVER_URL;
 
 
-function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players, setPlayers, usedIndexes, setUsedIndexes, round, setRound}){
+function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players, setPlayers, guesses, setGuesses, usedIndexes, setUsedIndexes, round, setRound}){
     const { roomId } = useParams();
-    const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
+    // const [tricksters, setTricksters] = useState(["user_1", "user_2", "user_4", "user_5", "user_6", "user_7", "user_8", "user_9"]);
     const [category, setCategory] = useState({ category: "Animals" });
     const [view, setView] = useState(isHost);
     const [artist, setArtist] = useState({});
@@ -27,7 +27,10 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
 
     useEffect(() => {
         if (socket) {
+            socket.emit('joinRoom', { userid: socket.id, room: roomId, userName: 'User' });
+
             socket.on('updateUserList', (users) => {
+                setPlayers(users);
                 const currentArtist = users.find((user) => user.isHost);
                 setArtist(currentArtist);
             });
@@ -127,9 +130,24 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
     },[isHost,roomId,category]);
 
 
+    // Note for testing: make sure you only try to submit the drawing of the current artist
+    function submitGuess(){
+        do{
+            if(socket){
+                if(view){
+                    setGuesses([...guesses, {text: category.category, userId: socket.id, voterIds: []}]);
+                }
+                else{
+                    const guess = document.getElementById("guess").value;
+                    setGuesses([...guesses, {text: guess, userId: socket.id, voterIds: []}]);
+                }
+            }
+        } while (!socket);
+    }
+
     //placeholder until the drawing can actually be sent to the backend
     const submitDrawing = useCallback(() => {
-        // navigate(`/voting/${roomId}`);
+        submitGuess();
         setViewNext(true);
         setViewCurr(false);
         setCounter(180);
@@ -264,7 +282,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
 
                 <form className="row-start-4 col-span-4">
                     <p>
-                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" placeholder="Enter Your Guess Here" />
+                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" maxlength="15" placeholder="Enter Your Guess Here" />
                     </p>
                 </form>
             </div>

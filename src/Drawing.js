@@ -140,35 +140,37 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
 
     // Note for testing: make sure you only try to submit the drawing of the current artist
     function submitGuess(){
-        do{
+        //do{
             if(socket){
                 if(view){
                     setGuesses([...guesses, {text: category.category, userId: socket.id, voterIds: []}]);
                 }
                 else { 
-                   const guess = document.getElementById("guess").value;
+                const guess = document.getElementById("guess").value;
                   if(isDrawingSubmitted && !isGuessSubmitted) {
                    setGuesses([...guesses, {text: guess, userId: socket.id, voterIds: []}]);
-                   setIsGuessSubmitted(true);
+                    setIsGuessSubmitted(true);
+                    setIsButtonDisabled(true);
                    socket.emit('guessSubmitted', { room: roomId });
-        }
+                }
                   
              
-                }
-            }
-        } while (!socket);
+        }
+    }
+    //} while (!socket);
     }
 
     //placeholder until the drawing can actually be sent to the backend
-    const submitDrawing = useCallback(() => {
+    const submitDrawing = () => {
         submitGuess();
         setIsDrawingDisabled(true);
+        setIsButtonDisabled(false);
         socket.emit('drawingSubmitted', { room: roomId })
-    }, [roomId, socket]);
+    };
 
-    
+   
     useEffect(() => {
-        if (counter <= 0) {
+        if (counter <= 90) {
             submitDrawing();
         }
     }, [counter, viewCurr, submitDrawing]);
@@ -189,7 +191,6 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
     useEffect(() => {
         if (socket) {
             socket.on('allGuessed', (data) => {
-                console.log('All guessed happened');
                 handleNextBtn();
             });
     
@@ -287,11 +288,11 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
     return (
         <div>
             {/* button for testing both views */}
-            <div className="bg-[#73bda8] text-[#6f5643] font-sans" onClick={swapView}>Switch to "Artist" View</div>
+            {/*<div className="bg-[#73bda8] text-[#6f5643] font-sans" onClick={swapView}>Switch to "Artist" View</div>*/}
 
             <div className="background custom-text grid grid-cols-4 grid-rows-4">
                 <div>
-                    <p className="sub-headerl">Fictionary</p>
+                    <p className="sub-header">Fictionary</p>
                     <p>Room: {roomId}</p>
                 </div>
                 <div className="row-start-2">
@@ -303,6 +304,8 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                 <div className="col-start-2 col-span-2 row-span-3">
                     <div className="col-start-2 col-span-2 row-start-2 row-span-2"><MyCanvas /></div>
                 </div>
+                
+
                 
                 <div className = "col-start-4 row-span-2">
                     {/*placeholder until the actual chatroom can be displayed*/}
@@ -318,7 +321,7 @@ function Drawing({viewCurr, setViewCurr, setViewNext,isHost, setIsHost, players,
                 </div>
                 <form className="row-start-4 col-span-4">
                     <p>
-                        <input className="text-entry-box w-5/6" type="text" id="guess" name="guess" maxlength="15" placeholder="Enter Your Guess Here" />
+                        <input className="text-entry-box w-1/3" type="text" id="guess" name="guess" maxlength="15" placeholder="Enter Your Guess Here" />
                     </p>
                     <div className="blue-button" onClick={submitGuess} disabled={isButtonDisabled}>Submit Guess</div>
                 </form>
@@ -410,7 +413,7 @@ function MyCanvas() {
             ref={canvasRef}
             width={443}
             height={350}
-            className="bg-white shadow-lg border-2 border-gray-300 m-10 h-11/12 w-11/12"
+            className="bg-white shadow-lg border-2 border-gray-300 m-10"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}

@@ -126,16 +126,7 @@ function Categories({ viewCurr, setViewCurr, setViewNext, players, setPlayers, i
                         </div>
                     ))}
                 </fieldset>
-                <div className="flex justify-center brown-button">
-                    <div>
-                        <button
-                            type="submit"
-                            disabled={isButtonDisabled || !selectedCategory}
-                        >
-                            Submit
-                        </button>
-                    </div>
-                </div>
+                <div disabled = {isButtonDisabled} onClick={handleSubmit} className="flex justify-center brown-button">Submit</div>
             </form>
         </div>
     );

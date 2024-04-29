@@ -50,8 +50,8 @@ const Canvas = () => {
   );
 };
 
-function Voting({viewCurr, setViewCurr, setViewNext, guesses, setGuesses}) {
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+function Voting({viewCurr, setViewCurr, setViewNext, guesses, setGuesses, isHost}) {
+    const [isButtonDisabled, setIsButtonDisabled] = useState(isHost ? true : false);
     const [seconds, setSeconds] = useState(60);
     /* FOR TESTING COMMENT OUT ABOVE LINE, UNCOMMENT BELOW LINE */
     // const [seconds, setSeconds] = useState(10);
@@ -135,15 +135,11 @@ function Voting({viewCurr, setViewCurr, setViewNext, guesses, setGuesses}) {
                 <p className='header'>CATEGORY IS</p> <br />
                 <p className='sub-header'>CATEGORY</p>
                 <div className="grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-4 shrink justify-center items-center">
-                  {guesses.map((guess) => <button onclick={changeGuesses} className="yellow-button m-2 w-24 h-16" id="test" key={guess.userId}>{guess.text}</button>)}
+                  {guesses.map((guess) => <button onclick={changeGuesses} className="yellow-button m-2 w-11/12 h-16" id="test" key={guess.userId}>{guess.text}</button>)}
                 </div>
               </div>
-              <div className="flex justify-center brown-button">
-                <div>
-                  <button onClick={handleVoteSubmit} disabled={isButtonDisabled} type="button" >
-                    Submit
-                  </button>
-                </div>
+              <div onClick={handleVoteSubmit} disabled={isButtonDisabled} className="flex justify-center brown-button">
+                Submit
               </div>
           </div>
       </div>

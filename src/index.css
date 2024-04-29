@@ -65,16 +65,28 @@ code {
   }
 
   .red-button{
-    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-1/5 p-2 my-2 mx-auto text-4xl rounded-lg;
+    @apply bg-[#cc6b49] text-[#ece6c2] hover:bg-[#9d492c] w-1/5 p-2 py-2 px-4 my-2 mx-auto text-4xl rounded-lg;
+  }
+  .red-button[disabled] {
+    @apply bg-[#e0e0e0] text-[#9e9e9e9e] cursor-not-allowed;
   }
   .yellow-button{
-    @apply bg-[#d2a24c] text-[#ece6c2] hover:bg-[#a77b2a] w-1/5 p-2 my-2 mx-auto text-4xl rounded-lg;
+    @apply bg-[#d2a24c] text-[#ece6c2] hover:bg-[#a77b2a] w-1/5 p-2 py-2 px-6 my-2 mx-auto text-4xl rounded-lg;
+  }
+  .yellow-button[disabled] {
+    @apply bg-[#e0e0e0] text-[#9e9e9e] cursor-not-allowed;
   }
   .brown-button{
-    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-1/5 p-2 my-2 mx-auto self-center text-4xl rounded-lg;
+    @apply bg-[#6f5643] text-[#ece6c2] hover:bg-[#3f3126] w-1/5 p-2 py-2 px-4 my-2 mx-auto self-center text-4xl rounded-lg;
+  }
+  .brown-button[disabled] {
+    @apply bg-[#e0e0e0] text-[#9e9e9e] cursor-not-allowed;
   }
   .blue-button{
-    @apply bg-[#73bda8] text-[#ece6c2] hover:bg-[#499b83] w-1/5 p-2 my-2 mx-auto self-center text-4xl rounded-lg;
+    @apply bg-[#73bda8] text-[#ece6c2] hover:bg-[#499b83] w-1/5 p-2 py-2 px-4 my-2 mx-auto self-center text-4xl rounded-lg;
+  }
+  .blue-button[disabled] {
+    @apply bg-[#e0e0e0] text-[#9e9e9e] cursor-not-allowed;
   }
 
   .rule-text {
